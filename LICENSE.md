@@ -15,4 +15,4 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 Copyright (c) 2012, Jose Miguel Venegas Mendoza & David Ricardo Venegas Mendoza
 All rights reserved.
 
-All the artwork in this package is licensed under a [Creative Commons Attribution 3.0 Unported](http://creativecommons.org/licenses/by/3.0/) License.
+All the artwork in this package is licensed under a [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/).
