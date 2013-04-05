@@ -10,7 +10,7 @@ class Main extends Engine
 	public static inline var kScreenHeight:Int = 480;
 	public static inline var kFrameRate:Int = 30;
 	public static inline var kClearColor:Int = 0x3a5c94;
-	public static inline var kProjectName:String = "ludumdare25";
+	public static inline var kProjectName:String = "ladron";
 
     public static var level = 1;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="ladron" package="com.example.app" version="1.0.0" company="" />
+	<meta title="ladron" package="com.rukbotto.ladron" version="0.0.1" company="" />
 
  	<app file="Main" main="Main" path="bin" />
 
