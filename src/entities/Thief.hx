@@ -15,7 +15,7 @@ import worlds.Play;
 import Main;
 
 
-class Thief extends Character 
+class Thief extends Character
 {
 
     private static inline var xDrag:Float = 2;
@@ -30,7 +30,7 @@ class Thief extends Character
     private var timer:Float;
     private var sprite:Spritemap;
 
-    public function new(x:Float, y:Float) 
+    public function new(x:Float, y:Float)
     {
         super(x, y);
         setHitbox(Constants.playerWidth, Constants.playerHeight);
@@ -49,7 +49,7 @@ class Thief extends Character
         pointsText = null;
         timer = 0;
 
-        sprite = new Spritemap("gfx/thief.png", 10, 30);
+        sprite = new Spritemap("graphics/thief.png", 10, 30);
         sprite.add("run", [0, 1, 0], 15);
         sprite.add("sneak", [0, 2, 0], 15);
         sprite.add("stand", [0]);
@@ -67,18 +67,18 @@ class Thief extends Character
         Input.define("action", [Key.X]);
     }
 
-    private function makeNoise() 
+    private function makeNoise()
     {
         awakeClosestOccupant();
         isMakingNoise = true;
     }
 
-    private function beQuiet() 
+    private function beQuiet()
     {
         isMakingNoise = false;
     }
 
-    private override function moveX() 
+    private override function moveX()
     {
         xAccel = 0;
 
@@ -119,7 +119,7 @@ class Thief extends Character
         HXP.setCamera(xSpeed + HXP.camera.x, 0);
     }
 
-    private override function moveY() 
+    private override function moveY()
     {
         ySpeed = ySpeed - (yAccel * HXP.elapsed);
 
@@ -130,7 +130,7 @@ class Thief extends Character
         moveBy(0, -ySpeed, ["ground", "floor"]);
     }
 
-    private override function goUpStairs() 
+    private override function goUpStairs()
     {
         var collideEntity: Entity;
 
@@ -144,7 +144,7 @@ class Thief extends Character
         }
     }
 
-    private override function goDownStairs() 
+    private override function goDownStairs()
     {
         var collideEntity: Entity;
 
@@ -153,16 +153,16 @@ class Thief extends Character
             beQuiet();
             if (Input.check("down"))
             {
-                this.y = collideEntity.y + Constants.roomHeight + 
-                        Constants.floorHeight + 
+                this.y = collideEntity.y + Constants.roomHeight +
+                        Constants.floorHeight +
                         (Constants.roomHeight - Constants.playerHeight);
             }
         }
     }
 
-    private override function sneak() 
+    private override function sneak()
     {
-        if (Input.check("sneak") && !Input.check("up") && !Input.check("down") && 
+        if (Input.check("sneak") && !Input.check("up") && !Input.check("down") &&
                 (Input.check("left") || Input.check("right")))
         {
             sprite.play("sneak");
@@ -171,14 +171,14 @@ class Thief extends Character
             generateRandomNoise();
         }
 
-        if (Input.check("sneak") && !Input.check("up") && !Input.check("down") && 
+        if (Input.check("sneak") && !Input.check("up") && !Input.check("down") &&
                 !Input.check("left") && !Input.check("right"))
         {
             sprite.play("stand");
         }
     }
 
-    private override function jump() 
+    private override function jump()
     {
         if (Input.check("up") && canJump)
         {
@@ -189,10 +189,10 @@ class Thief extends Character
         }
     }
 
-    private override function stand() 
+    private override function stand()
     {
-        if (!Input.check("sneak") && !Input.check("up") && 
-                !Input.check("down") && !Input.check("left") && 
+        if (!Input.check("sneak") && !Input.check("up") &&
+                !Input.check("down") && !Input.check("left") &&
                 !Input.check("right"))
         {
             sprite.play("stand");
@@ -200,9 +200,9 @@ class Thief extends Character
         }
     }
 
-    private override function run() 
+    private override function run()
     {
-        if (!Input.check("sneak") && 
+        if (!Input.check("sneak") &&
                 (Input.check("left") || Input.check("right")))
         {
             sprite.play("run");
@@ -215,7 +215,7 @@ class Thief extends Character
         }
     }
 
-    private function awakeClosestOccupant() 
+    private function awakeClosestOccupant()
     {
         var auxDistance:Float = 0;
         var distance:Float = Math.random()*30+60;
@@ -237,7 +237,7 @@ class Thief extends Character
         }
     }
 
-    private function generateRandomNoise() 
+    private function generateRandomNoise()
     {
         var chosen:Float = 21;
         var random:Float = Math.random() * 100;
@@ -247,7 +247,7 @@ class Thief extends Character
         }
     }
 
-    private function lookForLoot() 
+    private function lookForLoot()
     {
         var collideEntity:Entity;
 
@@ -267,20 +267,20 @@ class Thief extends Character
         }
     }
 
-    public function hurt() 
+    public function hurt()
     {
         if (lifes > 0) {
             lifes -= 1;
             cast(lifeText.graphic, Text).text = "Lifes: " + lifes;
-        } 
+        }
     }
 
-    public function isDead(): Bool 
+    public function isDead(): Bool
     {
         return lifes == 0 ? true : false;
     }
 
-    private function inLobby() 
+    private function inLobby()
     {
         var collideEntity:Entity;
         if ((collideEntity = collide("lobby", x, y)) != null && Input.check("action"))
@@ -296,22 +296,20 @@ class Thief extends Character
         }
     }
 
-    public override function moveCollideY(e:Entity) 
+    public override function moveCollideY(e:Entity):Bool
     {
-        super.moveCollideY(e);
-
         canJump = true;
         ySpeed = 0;
+        return super.moveCollideY(e);
     }
 
-    public override function moveCollideX(e:Entity) 
+    public override function moveCollideX(e:Entity):Bool
     {
-        super.moveCollideX(e);
-
         HXP.setCamera(e.x - HXP.halfWidth, 0);
+        return super.moveCollideX(e);
     }
 
-    public override function update() 
+    public override function update()
     {
         super.update();
 

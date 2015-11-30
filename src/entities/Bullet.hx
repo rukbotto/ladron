@@ -11,7 +11,7 @@ class Bullet extends Entity
 
     private var toRight:Bool;
 
-    public function new(x: Float, y: Float, toRight:Bool) 
+    public function new(x: Float, y: Float, toRight:Bool)
     {
         super(x, y);
         graphic = Image.createRect(5, 2, 0xFFFFFF);
@@ -20,7 +20,7 @@ class Bullet extends Entity
         type = "bullet";
     }
 
-    private function hitThief() 
+    private function hitThief()
     {
         var collideEntity:Entity;
         if ((collideEntity = collide("thief", x, y)) != null) {
@@ -34,7 +34,7 @@ class Bullet extends Entity
         }
     }
 
-    public override function update() 
+    public override function update()
     {
         super.update();
 
@@ -49,10 +49,9 @@ class Bullet extends Entity
         hitThief();
     }
 
-    public override function moveCollideX(e: Entity) 
+    public override function moveCollideX(e: Entity):Bool
     {
-        super.moveCollideX(e);
-
         world.remove(this);
+        return super.moveCollideX(e);
     }
 }

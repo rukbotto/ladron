@@ -29,7 +29,7 @@ class LevelGenerator
 
         var lobbyWidth:Int = 60;
         var lobbyHeight:Int = 60;
-        placeEntity(60, y - lobbyHeight, lobbyWidth, lobbyHeight, "lobby", "gfx/lobby.png");
+        placeEntity(60, y - lobbyHeight, lobbyWidth, lobbyHeight, "lobby", "graphics/lobby.png");
 
         for (i in 0...floors)
         {
@@ -56,19 +56,19 @@ class LevelGenerator
                 if (j == rooms - 1 && i % 2 == 0 && i < floors - 1)
                 {
                     placeEntity(roomX + (Constants.roomWidth - 15), roomY, 15, 
-                            Constants.roomHeight, "stairUp", "gfx/stairs_up.png");
+                            Constants.roomHeight, "stairUp", "graphics/stairs_up.png");
                 } else if (j == 0 && i % 2 != 0 && i < floors - 2)
                 {
                     placeEntity(roomX ,roomY, 15, Constants.roomHeight, 
-                            "stairUp", "gfx/stairs_up.png");
+                            "stairUp", "graphics/stairs_up.png");
                 } else if (j == rooms -1 && i % 2 != 0)
                 {
                     placeEntity(roomX + (Constants.roomWidth-15),roomY, 15, 
-                            Constants.roomHeight, "stairDown", "gfx/stairs_down.png");
+                            Constants.roomHeight, "stairDown", "graphics/stairs_down.png");
                 } else if (j == 0 && i % 2 == 0 && i > 0)
                 {
                     placeEntity(roomX ,roomY, 15, Constants.roomHeight, 
-                            "stairDown", "gfx/stairs_down.png");
+                            "stairDown", "graphics/stairs_down.png");
                 }
 
                 var chestWidth:Int = 20;
@@ -76,14 +76,14 @@ class LevelGenerator
                 var chestX:Int = roomX;
                 var chestY:Int = roomY + (Constants.roomHeight - chestHeight);
                 placeRandomEntity(chestX, Constants.roomWidth, chestY, 
-                        chestWidth, chestHeight, "chest", "gfx/chest.png");
+                        chestWidth, chestHeight, "chest", "graphics/chest.png");
 
                 var bedWidth:Int = 40;
                 var bedHeight:Int = 7;
                 var bedX = roomX;
                 var bedY:Int = roomY + (Constants.roomHeight - bedHeight);
                 placeRandomEntity(bedX, Constants.roomWidth, bedY, 40, 7, "bed", 
-                        "gfx/bed.png");
+                        "graphics/bed.png");
 
                 wallX = x + ((j + 1) * Constants.wallWidth) + 
                         ((j + 1) * Constants.roomWidth);

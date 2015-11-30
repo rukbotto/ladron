@@ -1,6 +1,6 @@
 package worlds;
 
-import com.haxepunk.World;
+import com.haxepunk.Scene;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.HXP;
 import com.haxepunk.utils.Input;
@@ -9,9 +9,9 @@ import utils.Score;
 import worlds.Play;
 
 
-class GameOver extends World{
-
-    public function new() 
+class GameOver extends Scene
+{
+    public function new()
     {
         super();
 
@@ -31,7 +31,7 @@ class GameOver extends World{
         messageText.y = HXP.halfHeight + 65;
     }
 
-    public override function update() 
+    public override function update()
     {
         if (Input.check(Key.SPACE)) {
             Main.resetLevel();

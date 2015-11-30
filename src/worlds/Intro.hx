@@ -1,6 +1,6 @@
 package worlds;
 
-import com.haxepunk.World;
+import com.haxepunk.Scene;
 import com.haxepunk.graphics.Text;
 import com.haxepunk.graphics.Text.TextOptions;
 import com.haxepunk.HXP;
@@ -9,9 +9,9 @@ import com.haxepunk.utils.Key;
 import utils.Score;
 
 
-class Intro extends World
+class Intro extends Scene
 {
-    public function new() 
+    public function new()
     {
         super();
 
@@ -20,9 +20,9 @@ class Intro extends World
         textOptions.wordWrap = true;
         textOptions.color = 0xFFFFFF;
 
-        var message:String = 
+        var message:String =
             "LADRON!\n\n" +
-            "Your goal is to steal the loot!\n\n" + 
+            "Your goal is to steal the loot!\n\n" +
             "Beware of the sleeping occupants, they will shot you if they hear you!\n\n" +
             "Keys:\n\n" +
             "<S> for sneaking, <X> to search the loot inside the closets, " +
@@ -37,7 +37,7 @@ class Intro extends World
         messageText.y = 10;
     }
 
-    public override function update() 
+    public override function update()
     {
         if (Input.check(Key.SPACE)) {
             HXP.world = new Play(1);

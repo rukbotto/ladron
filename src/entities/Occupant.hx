@@ -31,7 +31,7 @@ class Occupant extends Character
         etaAwake = 0;
         shootToRight = true;
 
-        graphic = new Image("gfx/occupant_sleeping.png");
+        graphic = new Image("graphics/occupant_sleeping.png");
     }
 
     public function awake()
@@ -41,7 +41,7 @@ class Occupant extends Character
             var auxWidth = this.width;
             this.width = this.height;
             this.height = auxWidth;
-            sprite = new Spritemap("gfx/occupant_awake.png", 10, 30);
+            sprite = new Spritemap("graphics/occupant_awake.png", 10, 30);
             sprite.add("awake", [0]);
             sprite.play("awake");
             graphic = sprite;
@@ -66,7 +66,7 @@ class Occupant extends Character
             var auxWidth = this.width;
             this.width = this.height;
             this.height = auxWidth;
-            graphic = new Image("gfx/occupant_sleeping.png");
+            graphic = new Image("graphics/occupant_sleeping.png");
             setHitbox(width, height);
             this.y += 13;
             this.isAwake = false;
