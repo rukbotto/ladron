@@ -22,7 +22,7 @@ class Play extends Sprite
 
         var background = Assets.getBitmapData("graphics/background.png");
         graphics.beginBitmapFill(background, false);
-        graphics.drawRect(0.0, 0.0, stage.stageWidth, stage.stageHeight-200);
+        graphics.drawRect(0.0, -200.0, stage.stageWidth, stage.stageHeight);
         graphics.endFill();
 
         graphics.beginFill(0xFFFFFF);
