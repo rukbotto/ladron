@@ -7,17 +7,28 @@ import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
+import com.rukbottoland.ladron.utils.InputManager;
+import com.rukbottoland.ladron.worlds.Play;
+
 class Intro extends Sprite
 {
-    public function new()
+    private var inputManager:InputManager;
+    private var isAdded:Bool;
+
+    public function new(inputManager:InputManager)
     {
         super();
+        this.inputManager = inputManager;
+        isAdded = false;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+        addEventListener(KeyboardEvent.KEY_DOWN, inputManager.onKeyDown);
+        addEventListener(KeyboardEvent.KEY_UP, inputManager.onKeyUp);
+        addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
         var message:String =
             "LADRON!\n\n" +
@@ -34,11 +45,23 @@ class Intro extends Sprite
 
         var messageField = new TextField();
         messageField.text = message;
-        messageField.width = 640;
-        messageField.height = 500;
+        messageField.width = stage.stageWidth;
+        messageField.height = stage.stageHeight;
         messageField.wordWrap = true;
         messageField.defaultTextFormat = textFormat;
 
         addChild(messageField);
+        isAdded = true;
+    }
+
+    public function onEnterFrame(event:Event)
+    {
+        if (inputManager.inputs.space) {
+            if (isAdded) {
+                stage.addChild(new Play(1));
+                stage.removeChildAt(1);
+                isAdded = false;
+            }
+        }
     }
 }
