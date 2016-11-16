@@ -9,6 +9,7 @@ import com.rukbottoland.ladron.entities.Floor;
 import com.rukbottoland.ladron.entities.Ground;
 import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
+import com.rukbottoland.ladron.entities.Stair;
 import com.rukbottoland.ladron.entities.Wall;
 
 class Play extends Sprite
@@ -51,6 +52,8 @@ class Play extends Sprite
         var roomY = 0.0;
         var floorX = 0.0;
         var floorY = 0.0;
+        var stairX = 0.0;
+        var stairY = 0.0;
 
         addChild(new Ground());
         addChild(new Lobby());
@@ -74,6 +77,31 @@ class Play extends Sprite
                 floorX = x + j * Wall.WIDTH + j * Room.WIDTH;
                 floorY = y - (i + 1) * Room.HEIGHT - (i + 1) * Floor.HEIGHT;
                 addChild(new Floor(floorX, floorY));
+
+                if (j == rooms - 1 && i % 2 == 0 && i < floors - 1)
+                {
+                    stairX = roomX + Room.WIDTH - Stair.WIDTH;
+                    stairY = roomY;
+                    addChild(new Stair(stairX, stairY));
+                }
+                else if (j == 0 && i % 2 != 0 && i < floors)
+                {
+                    stairX = roomX;
+                    stairY = roomY;
+                    addChild(new Stair(stairX, stairY));
+                }
+                else if (j == rooms - 1 && i % 2 != 0)
+                {
+                    stairX = roomX + Room.WIDTH - Stair.WIDTH;
+                    stairY = roomY;
+                    addChild(new Stair(stairX, stairY, false));
+                }
+                else if (j == 0 && i % 2 == 0 && i > 0)
+                {
+                    stairX = roomX;
+                    stairY = roomY;
+                    addChild(new Stair(stairX, stairY, false));
+                }
             }
         }
     }
