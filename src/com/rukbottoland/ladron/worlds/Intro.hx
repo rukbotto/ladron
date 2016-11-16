@@ -56,8 +56,10 @@ class Intro extends Sprite
 
     public function onEnterFrame(event:Event)
     {
-        if (inputManager.inputs.space) {
-            if (isAdded) {
+        if (inputManager.inputs.space)
+        {
+            if (isAdded)
+            {
                 stage.addChild(new Play(1));
                 stage.removeChildAt(1);
                 isAdded = false;
