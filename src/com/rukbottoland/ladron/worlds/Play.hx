@@ -68,7 +68,18 @@ class Play extends Sprite
             {
                 roomX = x + (j + 1) * Wall.WIDTH + j * Room.WIDTH;
                 roomY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
-                addChild(new Room(roomX, roomY));
+                var room = new Room(roomX, roomY);
+
+                if (j == rooms - 1 && i % 2 == 0 && i < floors - 1)
+                    room.setStairUpBack();
+                else if (j == 0 && i % 2 != 0 && i < floors - 1)
+                    room.setStairUpFront();
+                else if (j == rooms - 1 && i % 2 != 0)
+                    room.setStairDownBack();
+                else if (j == 0 && i % 2 == 0 && i > 0)
+                    room.setStairDownFront();
+
+                addChild(room);
 
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
@@ -77,31 +88,6 @@ class Play extends Sprite
                 floorX = x + j * Wall.WIDTH + j * Room.WIDTH;
                 floorY = y - (i + 1) * Room.HEIGHT - (i + 1) * Floor.HEIGHT;
                 addChild(new Floor(floorX, floorY));
-
-                if (j == rooms - 1 && i % 2 == 0 && i < floors - 1)
-                {
-                    stairX = roomX + Room.WIDTH - Stair.WIDTH;
-                    stairY = roomY;
-                    addChild(new Stair(stairX, stairY));
-                }
-                else if (j == 0 && i % 2 != 0 && i < floors)
-                {
-                    stairX = roomX;
-                    stairY = roomY;
-                    addChild(new Stair(stairX, stairY));
-                }
-                else if (j == rooms - 1 && i % 2 != 0)
-                {
-                    stairX = roomX + Room.WIDTH - Stair.WIDTH;
-                    stairY = roomY;
-                    addChild(new Stair(stairX, stairY, false));
-                }
-                else if (j == 0 && i % 2 == 0 && i > 0)
-                {
-                    stairX = roomX;
-                    stairY = roomY;
-                    addChild(new Stair(stairX, stairY, false));
-                }
             }
         }
     }
