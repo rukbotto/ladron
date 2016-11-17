@@ -3,10 +3,16 @@ package com.rukbottoland.ladron.entities;
 import flash.display.Sprite;
 import flash.events.Event;
 
+import com.rukbottoland.ladron.worlds.Play;
+
 class Room extends Sprite
 {
     public static inline var WIDTH:Float = 200;
     public static inline var HEIGHT:Float = 60;
+
+    public var childIdx(get,never):Map<String,Array<Int>>;
+    private var _childIdx:Map<String,Array<Int>>;
+    private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
 
     private var stairUp:Bool;
     private var stairDown:Bool;
@@ -17,6 +23,7 @@ class Room extends Sprite
     {
         super();
 
+        _childIdx = [ "closet" => [] ];
         this.x = x;
         this.y = y;
         stairUp = false;
@@ -54,7 +61,9 @@ class Room extends Sprite
 
         var closetX = Math.random() * (Room.WIDTH - Closet.WIDTH);
         var closetY = Room.HEIGHT - Closet.HEIGHT;
-        addChild(new Closet(closetX, closetY));
+        var closet = new Closet(closetX, closetY);
+        addChild(closet);
+        _childIdx["closet"].push(getChildIndex(closet));
 
         var bedX = Math.random() * (Room.WIDTH - Bed.WIDTH);
         var bedY = Room.HEIGHT - Bed.HEIGHT;
