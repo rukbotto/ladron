@@ -10,6 +10,7 @@ import com.rukbottoland.ladron.entities.Floor;
 import com.rukbottoland.ladron.entities.Ground;
 import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
+import com.rukbottoland.ladron.entities.Thief;
 import com.rukbottoland.ladron.entities.Wall;
 
 class Play extends Sprite
@@ -45,6 +46,8 @@ class Play extends Sprite
 
         generateBuilding();
         placeLoot();
+
+        addChild(new Thief(stage.stageWidth/2-140, stage.stageHeight - 200 - Thief.HEIGHT));
     }
 
     private function generateBuilding()

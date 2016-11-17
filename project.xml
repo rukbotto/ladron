@@ -12,6 +12,7 @@
 	<source path="src" />
 
 	<haxelib name="openfl" />
+	<haxelib name="spritesheet" />
 
 	<assets path="assets/graphics" rename="graphics" include="*.png|*.jpg" />
 	<assets path="assets/audio" rename="audio" include="*.mp3" if="flash" />
