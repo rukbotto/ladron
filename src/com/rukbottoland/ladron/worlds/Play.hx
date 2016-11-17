@@ -52,8 +52,6 @@ class Play extends Sprite
         var roomY = 0.0;
         var floorX = 0.0;
         var floorY = 0.0;
-        var stairX = 0.0;
-        var stairY = 0.0;
 
         addChild(new Ground());
         addChild(new Lobby());
