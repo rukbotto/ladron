@@ -1,8 +1,8 @@
 package com.rukbottoland.ladron;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.Lib;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.Lib;
 
 import com.rukbottoland.ladron.utils.InputManager;
 import com.rukbottoland.ladron.worlds.Intro;

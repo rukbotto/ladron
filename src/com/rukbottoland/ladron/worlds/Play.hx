@@ -1,9 +1,8 @@
 package com.rukbottoland.ladron.worlds;
 
-import flash.display.Sprite;
-import flash.events.Event;
-
 import openfl.Assets;
+import openfl.display.Sprite;
+import openfl.events.Event;
 
 import com.rukbottoland.ladron.entities.Closet;
 import com.rukbottoland.ladron.entities.Floor;

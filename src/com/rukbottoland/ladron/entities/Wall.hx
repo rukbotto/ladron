@@ -1,7 +1,7 @@
 package com.rukbottoland.ladron.entities;
 
-import flash.display.Sprite;
-import flash.events.Event;
+import openfl.display.Sprite;
+import openfl.events.Event;
 
 class Wall extends Sprite
 {

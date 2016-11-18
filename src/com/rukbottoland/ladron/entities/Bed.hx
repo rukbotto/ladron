@@ -1,9 +1,8 @@
 package com.rukbottoland.ladron.entities;
 
-import flash.display.Sprite;
-import flash.events.Event;
-
 import openfl.Assets;
+import openfl.display.Sprite;
+import openfl.events.Event;
 
 class Bed extends Sprite
 {

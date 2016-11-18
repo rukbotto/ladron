@@ -1,8 +1,7 @@
 package com.rukbottoland.ladron.worlds;
 
-import flash.display.Sprite;
-import flash.events.Event;
-
+import openfl.display.Sprite;
+import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
