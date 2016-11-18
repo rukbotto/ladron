@@ -2,6 +2,7 @@ package com.rukbottoland.ladron;
 
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.events.KeyboardEvent;
 import openfl.Lib;
 
 import com.rukbottoland.ladron.utils.InputManager;
@@ -23,6 +24,10 @@ class Main extends Sprite
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, inputManager.onKeyDown);
+        stage.addEventListener(KeyboardEvent.KEY_UP, inputManager.onKeyUp);
+
         stage.addChild(new Intro(inputManager));
     }
 

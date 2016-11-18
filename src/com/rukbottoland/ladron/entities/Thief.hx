@@ -5,6 +5,9 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.Lib;
 
+import com.rukbottoland.ladron.utils.Tools;
+import com.rukbottoland.ladron.worlds.Play;
+
 import spritesheet.AnimatedSprite;
 import spritesheet.data.BehaviorData;
 import spritesheet.importers.BitmapImporter;
@@ -14,14 +17,29 @@ class Thief extends Sprite
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
 
-    private var animation:AnimatedSprite;
-    private var lastTime:Int = 0;
+    private var world:Play;
+    private var inputs:Dynamic;
 
-    public function new(x:Float, y:Float)
+    private var behaviors:Dynamic;
+    private var animation:AnimatedSprite;
+    private var timer:Int = 0;
+    private var lastTimer:Int = 0;
+
+    private var xAccel:Float = 0;
+    private var xSpeed:Float = 0;
+    private var xMaxSpeed:Float = 6;
+    private var xDrag:Float = 2;
+    private var isMakingNoise:Bool = false;
+
+    public function new(x:Float, y:Float, world:Play)
     {
         super();
+
+        this.world = world;
+        inputs = world.inputManager.inputs;
         this.x = x;
         this.y = y;
+
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
@@ -30,20 +48,22 @@ class Thief extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        var run = new BehaviorData("run", [0, 1, 0], false, 15);
-        var sneak = new BehaviorData("sneak", [0, 2, 0], false, 15);
-        var stand = new BehaviorData("stand", [0], false, 0);
-        var jump = new BehaviorData("jump", [3, 0], false, 15);
-        var search = new BehaviorData("search", [4], false, 0);
+        behaviors = {
+            run: new BehaviorData("run", [0, 1, 0], true, 15),
+            sneak: new BehaviorData("sneak", [0, 2, 0], true, 15),
+            stand: new BehaviorData("stand", [0], false, 15),
+            jump: new BehaviorData("jump", [3, 0], false, 15),
+            search: new BehaviorData("search", [4], false, 0),
+        }
 
         var bitmapData = Assets.getBitmapData("graphics/thief.png");
         var spritesheet = BitmapImporter.create(bitmapData, 5, 1,
             Std.int(Thief.WIDTH), Std.int(Thief.HEIGHT));
-        spritesheet.addBehavior(run);
-        spritesheet.addBehavior(sneak);
-        spritesheet.addBehavior(stand);
-        spritesheet.addBehavior(jump);
-        spritesheet.addBehavior(search);
+        spritesheet.addBehavior(behaviors.run);
+        spritesheet.addBehavior(behaviors.sneak);
+        spritesheet.addBehavior(behaviors.stand);
+        spritesheet.addBehavior(behaviors.jump);
+        spritesheet.addBehavior(behaviors.search);
 
         animation = new AnimatedSprite(spritesheet, true);
         animation.showBehavior("stand");
@@ -53,9 +73,63 @@ class Thief extends Sprite
 
     public function onEnterFrame(event:Event)
     {
-        var time = Lib.getTimer();
-        var delta = time - lastTime;
-        animation.update(delta);
-        lastTime = time;
+        timer = Lib.getTimer();
+
+        xAccel = 0;
+
+        if (inputs.left)
+        {
+            animation.x = Thief.WIDTH;
+            animation.scaleX = -1;
+            xAccel = -1;
+        }
+        else if (inputs.right)
+        {
+            animation.x = 0;
+            animation.scaleX = 1;
+            xAccel = 1;
+        }
+
+        if (inputs.sneak && inputs.left || inputs.sneak && inputs.right)
+        {
+            if (animation.currentBehavior != behaviors.sneak)
+                animation.showBehavior("sneak");
+
+            xMaxSpeed = 3;
+            isMakingNoise = false;
+
+            if (Math.random() * 100 >= 21 && Math.random() * 100 <= 22)
+                isMakingNoise = true;
+        }
+        else if (!inputs.sneak && inputs.left || !inputs.sneak && inputs.right)
+        {
+            if (animation.currentBehavior != behaviors.run)
+                animation.showBehavior("run");
+
+            xMaxSpeed = 5;
+            isMakingNoise = true;
+        }
+        else
+        {
+            animation.showBehavior("stand");
+            isMakingNoise = false;
+        }
+
+        xSpeed += xAccel * 3;
+
+        if (Math.abs(xSpeed) > xMaxSpeed)
+            xSpeed = xMaxSpeed * Tools.sign(xSpeed);
+
+        if (xSpeed < 0)
+            xSpeed = Math.min(xSpeed + xDrag, 0);
+
+        if (xSpeed > 0)
+            xSpeed = Math.max(xSpeed - xDrag, 0);
+
+        x += xSpeed;
+        world.x -= xSpeed;
+
+        animation.update(timer - lastTimer);
+        lastTimer = timer;
     }
 }

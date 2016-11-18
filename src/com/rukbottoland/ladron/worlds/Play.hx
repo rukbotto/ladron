@@ -11,16 +11,22 @@ import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
 import com.rukbottoland.ladron.entities.Thief;
 import com.rukbottoland.ladron.entities.Wall;
+import com.rukbottoland.ladron.utils.InputManager;
 
 class Play extends Sprite
 {
+    public var inputManager(get,never):InputManager;
+    private var _inputManager:InputManager;
+    private function get_inputManager() : InputManager { return _inputManager; }
+
     private var difficulty:Int;
     private var childIdx:Map<String,Array<Int>>;
 
-    public function new(difficulty:Int)
+    public function new(difficulty:Int, inputManager:InputManager)
     {
         super();
 
+        _inputManager = inputManager;
         this.difficulty = difficulty;
         childIdx = [ "room" => [] ];
 
@@ -32,8 +38,8 @@ class Play extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
         var background = Assets.getBitmapData("graphics/background.png");
-        graphics.beginBitmapFill(background, false);
-        graphics.drawRect(0, -200, stage.stageWidth, stage.stageHeight);
+        graphics.beginBitmapFill(background, true);
+        graphics.drawRect(-1000, -200, stage.stageWidth * 10, stage.stageHeight);
         graphics.endFill();
 
         graphics.beginFill(0xffffff);
@@ -46,7 +52,9 @@ class Play extends Sprite
         generateBuilding();
         placeLoot();
 
-        addChild(new Thief(stage.stageWidth/2-140, stage.stageHeight - 200 - Thief.HEIGHT));
+        var thiefX = stage.stageWidth / 2 - 140;
+        var thiefY = stage.stageHeight - 200 - Thief.HEIGHT;
+        addChild(new Thief(thiefX, thiefY, this));
     }
 
     private function generateBuilding()

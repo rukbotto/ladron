@@ -2,7 +2,6 @@ package com.rukbottoland.ladron.worlds;
 
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
@@ -25,8 +24,6 @@ class Intro extends Sprite
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-        addEventListener(KeyboardEvent.KEY_DOWN, inputManager.onKeyDown);
-        addEventListener(KeyboardEvent.KEY_UP, inputManager.onKeyUp);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
         var message:String =
@@ -59,7 +56,7 @@ class Intro extends Sprite
         {
             if (isAdded)
             {
-                stage.addChild(new Play(1));
+                stage.addChild(new Play(1, inputManager));
                 stage.removeChildAt(1);
                 isAdded = false;
             }
