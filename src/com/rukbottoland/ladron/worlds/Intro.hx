@@ -56,8 +56,8 @@ class Intro extends Sprite
         {
             if (isAdded)
             {
-                stage.addChild(new Play(1, inputManager));
-                stage.removeChildAt(1);
+                stage.addChildAt(new Play(1, inputManager), 1);
+                stage.removeChildAt(2);
                 isAdded = false;
             }
         }

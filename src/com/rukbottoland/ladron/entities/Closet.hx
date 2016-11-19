@@ -28,20 +28,9 @@ class Closet extends Sprite
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-        addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
         graphics.beginBitmapFill(Assets.getBitmapData("graphics/chest.png"));
         graphics.drawRect(0, 0, Closet.WIDTH, Closet.HEIGHT);
         graphics.endFill();
-    }
-
-    public function onEnterFrame(event:Event)
-    {
-        if (_hasLoot)
-        {
-            graphics.beginFill(0xff0000);
-            graphics.drawRect(0, 0, 5, 5);
-            graphics.endFill();
-        }
     }
 }

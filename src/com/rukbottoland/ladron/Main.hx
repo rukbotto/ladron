@@ -7,6 +7,7 @@ import openfl.Lib;
 
 import com.rukbottoland.ladron.utils.InputManager;
 import com.rukbottoland.ladron.worlds.Intro;
+import com.rukbottoland.ladron.utils.DebugInfo;
 
 class Main extends Sprite
 {
@@ -29,6 +30,9 @@ class Main extends Sprite
         stage.addEventListener(KeyboardEvent.KEY_UP, inputManager.onKeyUp);
 
         stage.addChild(new Intro(inputManager));
+#if debug
+        stage.addChild(new DebugInfo());
+#end
     }
 
     public static function main()
