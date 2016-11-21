@@ -87,12 +87,11 @@ class Thief extends Sprite
 
         addChild(animation);
 
-        var textFormat = new TextFormat("Arial", 12, 0xffffff);
+        var font = Assets.getFont("font/04B_03__.ttf");
+        var textFormat = new TextFormat(font.fontName, 14, 0xffffff);
         lootLabel = new TextField();
         lootLabel.visible = false;
-        lootLabel.x = 0;
-        lootLabel.y = 0;
-        lootLabel.text = "Loot found!";
+        lootLabel.text = "Loot Found!";
         lootLabel.width = 0;
         lootLabel.height = 0;
         lootLabel.wordWrap = true;
@@ -147,7 +146,7 @@ class Thief extends Sprite
             if (currentCloset != null && currentCloset.hasLoot)
             {
                 lootLabel.visible = true;
-                lootLabel.x = -25;
+                lootLabel.x = -35;
                 lootLabel.y = -20;
                 lootLabel.width = 100;
                 lootLabel.height = 20;
