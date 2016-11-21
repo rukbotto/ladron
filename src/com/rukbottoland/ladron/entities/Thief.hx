@@ -1,10 +1,14 @@
 package com.rukbottoland.ladron.entities;
 
 import openfl.Assets;
+import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.Lib;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
+import com.rukbottoland.ladron.entities.Closet;
+import com.rukbottoland.ladron.entities.Room;
 import com.rukbottoland.ladron.utils.Tools;
 import com.rukbottoland.ladron.worlds.Play;
 
@@ -26,6 +30,8 @@ class Thief extends Sprite
     private var elapsed:Int = 0;
     private var lastTimer:Int = 0;
 
+    private var lootLabel:TextField;
+
     private var yInitial:Float;
 
     private var xAccel:Float = 0;
@@ -34,8 +40,12 @@ class Thief extends Sprite
     private var xDrag:Float = 2;
     private var yAccel:Float = 0;
     private var ySpeed:Float = 0;
+
     private var isMakingNoise:Bool = false;
     private var isJumping:Bool = false;
+
+    private var currentRoom:Room = null;
+    private var currentCloset:Closet = null;
 
     public function new(x:Float, y:Float, world:Play)
     {
@@ -58,7 +68,7 @@ class Thief extends Sprite
         behaviors = [
             "run" => new BehaviorData("run", [0, 1, 0], true, 15),
             "sneak" => new BehaviorData("sneak", [0, 2, 0], true, 15),
-            "stand" => new BehaviorData("stand", [0], false, 15),
+            "stand" => new BehaviorData("stand", [0], false, 0),
             "jump" => new BehaviorData("jump", [3, 0], true, 15),
             "search" => new BehaviorData("search", [4], false, 0),
         ];
@@ -76,6 +86,19 @@ class Thief extends Sprite
         animation.showBehavior("stand");
 
         addChild(animation);
+
+        var textFormat = new TextFormat("Arial", 12, 0xffffff);
+        lootLabel = new TextField();
+        lootLabel.visible = false;
+        lootLabel.x = 0;
+        lootLabel.y = 0;
+        lootLabel.text = "Loot found!";
+        lootLabel.width = 0;
+        lootLabel.height = 0;
+        lootLabel.wordWrap = true;
+        lootLabel.defaultTextFormat = textFormat;
+
+        addChild(lootLabel);
     }
 
     public function onEnterFrame(event:Event)
@@ -118,6 +141,18 @@ class Thief extends Sprite
             xMaxSpeed = 5;
             isMakingNoise = true;
         }
+        else if (inputs.search)
+        {
+            animation.showBehavior("search");
+            if (currentCloset != null && currentCloset.hasLoot)
+            {
+                lootLabel.visible = true;
+                lootLabel.x = -25;
+                lootLabel.y = -20;
+                lootLabel.width = 100;
+                lootLabel.height = 20;
+            }
+        }
         else
         {
             animation.showBehavior("stand");
@@ -148,6 +183,29 @@ class Thief extends Sprite
                 yAccel = 0;
                 ySpeed = 0;
                 isJumping = false;
+            }
+        }
+
+        currentRoom = null;
+        for (i in world.childIdx["room"])
+        {
+            if (hitTestObject(world.getChildAt(i)))
+            {
+                currentRoom = cast(world.getChildAt(i), Room);
+                break;
+            }
+        }
+
+        if (currentRoom != null)
+        {
+            currentCloset = null;
+            for (i in currentRoom.childIdx["closet"])
+            {
+                if (hitTestObject(currentRoom.getChildAt(i)))
+                {
+                    currentCloset = cast(currentRoom.getChildAt(i), Closet);
+                    break;
+                }
             }
         }
 
