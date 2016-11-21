@@ -20,7 +20,7 @@ class Thief extends Sprite
     private var world:Play;
     private var inputs:Dynamic;
 
-    private var behaviors:Dynamic;
+    private var behaviors:Map<String,BehaviorData>;
     private var animation:AnimatedSprite;
     private var timer:Int = 0;
     private var elapsed:Int = 0;
@@ -55,22 +55,22 @@ class Thief extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        behaviors = {
-            run: new BehaviorData("run", [0, 1, 0], true, 15),
-            sneak: new BehaviorData("sneak", [0, 2, 0], true, 15),
-            stand: new BehaviorData("stand", [0], false, 15),
-            jump: new BehaviorData("jump", [3, 0], true, 15),
-            search: new BehaviorData("search", [4], false, 0),
-        }
+        behaviors = [
+            "run" => new BehaviorData("run", [0, 1, 0], true, 15),
+            "sneak" => new BehaviorData("sneak", [0, 2, 0], true, 15),
+            "stand" => new BehaviorData("stand", [0], false, 15),
+            "jump" => new BehaviorData("jump", [3, 0], true, 15),
+            "search" => new BehaviorData("search", [4], false, 0),
+        ];
 
         var bitmapData = Assets.getBitmapData("graphics/thief.png");
         var spritesheet = BitmapImporter.create(bitmapData, 5, 1,
             Std.int(Thief.WIDTH), Std.int(Thief.HEIGHT));
-        spritesheet.addBehavior(behaviors.run);
-        spritesheet.addBehavior(behaviors.sneak);
-        spritesheet.addBehavior(behaviors.stand);
-        spritesheet.addBehavior(behaviors.jump);
-        spritesheet.addBehavior(behaviors.search);
+        spritesheet.addBehavior(behaviors["run"]);
+        spritesheet.addBehavior(behaviors["sneak"]);
+        spritesheet.addBehavior(behaviors["stand"]);
+        spritesheet.addBehavior(behaviors["jump"]);
+        spritesheet.addBehavior(behaviors["search"]);
 
         animation = new AnimatedSprite(spritesheet, true);
         animation.showBehavior("stand");
@@ -101,7 +101,7 @@ class Thief extends Sprite
 
         if (inputs.sneak && inputs.left || inputs.sneak && inputs.right)
         {
-            if (animation.currentBehavior != behaviors.sneak)
+            if (animation.currentBehavior != behaviors["sneak"])
                 animation.showBehavior("sneak");
 
             xMaxSpeed = 3;
@@ -112,7 +112,7 @@ class Thief extends Sprite
         }
         else if (!inputs.sneak && inputs.left || !inputs.sneak && inputs.right)
         {
-            if (animation.currentBehavior != behaviors.run)
+            if (animation.currentBehavior != behaviors["run"])
                 animation.showBehavior("run");
 
             xMaxSpeed = 5;
@@ -134,7 +134,7 @@ class Thief extends Sprite
 
         if (isJumping)
         {
-            if (animation.currentBehavior != behaviors.jump)
+            if (animation.currentBehavior != behaviors["jump"])
                 animation.showBehavior("jump");
         }
 
