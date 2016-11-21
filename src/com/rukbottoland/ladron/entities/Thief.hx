@@ -60,7 +60,7 @@ class Thief extends Sprite
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
-    public function onAddedToStage(event:Event)
+    private function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -100,7 +100,7 @@ class Thief extends Sprite
         addChild(lootLabel);
     }
 
-    public function onEnterFrame(event:Event)
+    private function onEnterFrame(event:Event)
     {
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
