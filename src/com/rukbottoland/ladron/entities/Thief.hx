@@ -23,13 +23,19 @@ class Thief extends Sprite
     private var behaviors:Dynamic;
     private var animation:AnimatedSprite;
     private var timer:Int = 0;
+    private var elapsed:Int = 0;
     private var lastTimer:Int = 0;
+
+    private var yInitial:Float;
 
     private var xAccel:Float = 0;
     private var xSpeed:Float = 0;
     private var xMaxSpeed:Float = 6;
     private var xDrag:Float = 2;
+    private var yAccel:Float = 0;
+    private var ySpeed:Float = 0;
     private var isMakingNoise:Bool = false;
+    private var isJumping:Bool = false;
 
     public function new(x:Float, y:Float, world:Play)
     {
@@ -39,6 +45,7 @@ class Thief extends Sprite
         inputs = world.inputManager.inputs;
         this.x = x;
         this.y = y;
+        yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
@@ -52,7 +59,7 @@ class Thief extends Sprite
             run: new BehaviorData("run", [0, 1, 0], true, 15),
             sneak: new BehaviorData("sneak", [0, 2, 0], true, 15),
             stand: new BehaviorData("stand", [0], false, 15),
-            jump: new BehaviorData("jump", [3, 0], false, 15),
+            jump: new BehaviorData("jump", [3, 0], true, 15),
             search: new BehaviorData("search", [4], false, 0),
         }
 
@@ -74,8 +81,10 @@ class Thief extends Sprite
     public function onEnterFrame(event:Event)
     {
         timer = Lib.getTimer();
+        elapsed = timer - lastTimer;
 
         xAccel = 0;
+        yAccel = 15;
 
         if (inputs.left)
         {
@@ -115,21 +124,47 @@ class Thief extends Sprite
             isMakingNoise = false;
         }
 
-        xSpeed += xAccel * 3;
+        if (inputs.up && !isJumping)
+        {
+            y = yInitial - 1;
+            ySpeed = -3.8;
+            isMakingNoise = true;
+            isJumping = true;
+        }
 
+        if (isJumping)
+        {
+            if (animation.currentBehavior != behaviors.jump)
+                animation.showBehavior("jump");
+        }
+
+        // Collisions
+
+        for (i in world.childIdx["ground"])
+        {
+            if (hitTestObject(world.getChildAt(i)))
+            {
+                y = yInitial;
+                yAccel = 0;
+                ySpeed = 0;
+                isJumping = false;
+            }
+        }
+
+        xSpeed += xAccel * 3;
         if (Math.abs(xSpeed) > xMaxSpeed)
             xSpeed = xMaxSpeed * Tools.sign(xSpeed);
-
         if (xSpeed < 0)
             xSpeed = Math.min(xSpeed + xDrag, 0);
-
         if (xSpeed > 0)
             xSpeed = Math.max(xSpeed - xDrag, 0);
-
         x += xSpeed;
         world.x -= xSpeed;
 
-        animation.update(timer - lastTimer);
+        ySpeed += yAccel * (elapsed / 1000);
+        y += ySpeed;
+
+        animation.update(elapsed);
         lastTimer = timer;
     }
 }

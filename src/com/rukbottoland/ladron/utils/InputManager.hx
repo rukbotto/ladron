@@ -16,6 +16,7 @@ class InputManager
             sneak: false,
             left: false,
             right: false,
+            up: false,
         };
     }
 
@@ -32,6 +33,9 @@ class InputManager
 
         if (event.keyCode == Keyboard.RIGHT)
             _inputs.right = true;
+
+        if (event.keyCode == Keyboard.UP)
+            _inputs.up = true;
     }
 
     public function onKeyUp(event:KeyboardEvent)
@@ -47,5 +51,8 @@ class InputManager
 
         if (event.keyCode == Keyboard.RIGHT)
             _inputs.right = false;
+
+        if (event.keyCode == Keyboard.UP)
+            _inputs.up = false;
     }
 }

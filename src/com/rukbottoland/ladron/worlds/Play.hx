@@ -19,16 +19,22 @@ class Play extends Sprite
     private var _inputManager:InputManager;
     private function get_inputManager() : InputManager { return _inputManager; }
 
+    public var childIdx(get,never):Map<String,Array<Int>>;
+    private var _childIdx:Map<String,Array<Int>>;
+    private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
+
     private var difficulty:Int;
-    private var childIdx:Map<String,Array<Int>>;
 
     public function new(difficulty:Int, inputManager:InputManager)
     {
         super();
 
         _inputManager = inputManager;
+        _childIdx = [
+            "room" => [],
+            "ground" => [],
+        ];
         this.difficulty = difficulty;
-        childIdx = [ "room" => [] ];
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
@@ -46,14 +52,17 @@ class Play extends Sprite
         graphics.drawCircle(200, 200, 40);
         graphics.endFill();
 
-        addChild(new Ground());
+        var ground = new Ground();
+        addChild(ground);
+        _childIdx["ground"].push(getChildIndex(ground));
+
         addChild(new Lobby());
 
         generateBuilding();
         placeLoot();
 
         var thiefX = stage.stageWidth / 2 - 140;
-        var thiefY = stage.stageHeight - 200 - Thief.HEIGHT;
+        var thiefY = ground.y - Thief.HEIGHT;
         addChild(new Thief(thiefX, thiefY, this));
     }
 
@@ -91,7 +100,7 @@ class Play extends Sprite
                 else if (j == 0 && i % 2 == 0 && i > 0)
                     room.setStairDownFront();
                 addChild(room);
-                childIdx["room"].push(getChildIndex(room));
+                _childIdx["room"].push(getChildIndex(room));
 
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
@@ -106,9 +115,9 @@ class Play extends Sprite
 
     private function placeLoot()
     {
-        var totalRooms = childIdx["room"].length;
+        var totalRooms = _childIdx["room"].length;
         var random = Math.round(Math.random() * (totalRooms - 1.0));
-        var room = cast(getChildAt(childIdx["room"][random]), Room);
+        var room = cast(getChildAt(_childIdx["room"][random]), Room);
         for (i in room.childIdx["closet"])
             cast(room.getChildAt(i), Closet).hasLoot = true;
     }
