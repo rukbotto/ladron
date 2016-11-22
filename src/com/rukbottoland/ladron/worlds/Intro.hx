@@ -59,7 +59,7 @@ class Intro extends Sprite
             if (isActive)
             {
                 stage.addChildAt(new Play(1, inputManager), 1);
-                stage.removeChildAt(2);
+                stage.removeChild(this);
                 isActive = false;
             }
         }

@@ -113,10 +113,11 @@ class Play extends Sprite
 
             stage.removeChild(scoreLabel);
             stage.removeChild(healthLabel);
+            stage.removeChild(timeLabel);
 
             Main.increaseLevel();
             stage.addChildAt(new Play(Main.level, _inputManager), 1);
-            stage.removeChildAt(2);
+            stage.removeChild(this);
 
             isActive = false;
         }
