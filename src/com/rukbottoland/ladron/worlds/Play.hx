@@ -29,6 +29,7 @@ class Play extends Sprite
     private var scoreLabel:TextField;
     private var healthLabel:TextField;
     private var timeLabel:TextField;
+    private var lootLabel:TextField;
 
     private var difficulty:Int;
     private var isActive:Bool = false;
@@ -77,6 +78,15 @@ class Play extends Sprite
         timeLabel.defaultTextFormat = textFormat;
         stage.addChild(timeLabel);
 
+        textFormat.size = 14;
+        lootLabel = new TextField();
+        lootLabel.visible = false;
+        lootLabel.text = "Loot Found!";
+        lootLabel.width = 150;
+        lootLabel.height = 14;
+        lootLabel.defaultTextFormat = textFormat;
+        stage.addChild(lootLabel);
+
         var background = Assets.getBitmapData("graphics/background.png");
         graphics.beginBitmapFill(background, true);
         graphics.drawRect(-1000, -200, stage.stageWidth * 10, stage.stageHeight);
@@ -102,6 +112,8 @@ class Play extends Sprite
         thief = new Thief(thiefX, thiefY, this);
         addChild(thief);
 
+        lootLabel.x = thiefX - lootLabel.width / 2;
+
         isActive = true;
     }
 
@@ -114,6 +126,7 @@ class Play extends Sprite
             stage.removeChild(scoreLabel);
             stage.removeChild(healthLabel);
             stage.removeChild(timeLabel);
+            stage.removeChild(lootLabel);
 
             Main.increaseLevel();
             stage.addChildAt(new Play(Main.level, _inputManager), 1);
@@ -136,6 +149,10 @@ class Play extends Sprite
         timeLabel.text = "Time: " + thief.time;
         timeLabel.x = stage.stageWidth / 10 * 5 - timeLabel.width / 2;
         timeLabel.y = stage.stageHeight / 20;
+
+        lootLabel.y = thief.y - 20;
+
+        if (thief.hasFoundLoot) lootLabel.visible = true;
     }
 
     private function generateBuilding()

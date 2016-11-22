@@ -4,8 +4,6 @@ import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
 
 import com.rukbottoland.ladron.Main;
 import com.rukbottoland.ladron.entities.Closet;
@@ -35,6 +33,10 @@ class Thief extends Sprite
     private var _time:Int = 0;
     private function get_time():Int { return _time; }
 
+    public var hasFoundLoot(get,never):Bool;
+    private var _hasFoundLoot:Bool = false;
+    private function get_hasFoundLoot():Bool { return _hasFoundLoot; }
+
     private var world:Play;
     private var inputs:Dynamic;
 
@@ -45,8 +47,6 @@ class Thief extends Sprite
 
     private var behaviors:Map<String,BehaviorData>;
     private var animation:AnimatedSprite;
-
-    private var lootLabel:TextField;
 
     private var yInitial:Float;
 
@@ -64,7 +64,6 @@ class Thief extends Sprite
     private var isJumping:Bool = false;
     private var isAirborne:Bool = false;
     private var isMakingNoise:Bool = false;
-    private var hasFoundLoot:Bool = false;
 
     private var lobby:Lobby = null;
     private var currentRoom:Room = null;
@@ -107,18 +106,6 @@ class Thief extends Sprite
         animation = new AnimatedSprite(spritesheet, true);
         animation.showBehavior("stand");
         addChild(animation);
-
-        var font = Assets.getFont("font/04B_03__.ttf");
-        var textFormat = new TextFormat(font.fontName, 14, 0xffffff);
-
-        lootLabel = new TextField();
-        lootLabel.visible = false;
-        lootLabel.text = "Loot Found!";
-        lootLabel.width = 0;
-        lootLabel.height = 0;
-        lootLabel.wordWrap = true;
-        lootLabel.defaultTextFormat = textFormat;
-        addChild(lootLabel);
     }
 
     private function onEnterFrame(event:Event)
@@ -269,17 +256,9 @@ class Thief extends Sprite
         else if (isSearching)
         {
             if (currentCloset != null && currentCloset.hasLoot)
-            {
-                lootLabel.visible = true;
-                lootLabel.x = -35;
-                lootLabel.y = -20;
-                lootLabel.width = 100;
-                lootLabel.height = 20;
+                _hasFoundLoot = true;
 
-                hasFoundLoot = true;
-            }
-
-            if (lobby != null && hasFoundLoot)
+            if (lobby != null && _hasFoundLoot)
                 world.loadNextLevel();
         }
         else
