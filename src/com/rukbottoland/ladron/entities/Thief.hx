@@ -7,7 +7,9 @@ import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
+import com.rukbottoland.ladron.Main;
 import com.rukbottoland.ladron.entities.Closet;
+import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
 import com.rukbottoland.ladron.utils.Tools;
 import com.rukbottoland.ladron.worlds.Play;
@@ -48,7 +50,9 @@ class Thief extends Sprite
     private var isJumping:Bool = false;
     private var isAirborne:Bool = false;
     private var isMakingNoise:Bool = false;
+    private var hasFoundLoot:Bool = false;
 
+    private var lobby:Lobby = null;
     private var currentRoom:Room = null;
     private var currentCloset:Closet = null;
 
@@ -157,26 +161,27 @@ class Thief extends Sprite
                 isAirborne = false;
         }
 
-        currentRoom = null;
+        for (i in world.childIdx["lobby"])
+        {
+            lobby = cast(world.getChildAt(i), Lobby);
+            if (hitTestObject(lobby)) break;
+            lobby = null;
+        }
+
         for (i in world.childIdx["room"])
         {
-            if (hitTestObject(world.getChildAt(i)))
-            {
-                currentRoom = cast(world.getChildAt(i), Room);
-                break;
-            }
+            currentRoom = cast(world.getChildAt(i), Room);
+            if (hitTestObject(currentRoom)) break;
+            currentRoom = null;
         }
 
         if (currentRoom != null)
         {
-            currentCloset = null;
             for (i in currentRoom.childIdx["closet"])
             {
-                if (hitTestObject(currentRoom.getChildAt(i)))
-                {
-                    currentCloset = cast(currentRoom.getChildAt(i), Closet);
-                    break;
-                }
+                currentCloset = cast(currentRoom.getChildAt(i), Closet);
+                if (hitTestObject(currentCloset)) break;
+                currentCloset = null;
             }
         }
     }
@@ -250,7 +255,12 @@ class Thief extends Sprite
                 lootLabel.y = -20;
                 lootLabel.width = 100;
                 lootLabel.height = 20;
+
+                hasFoundLoot = true;
             }
+
+            if (lobby != null && hasFoundLoot)
+                world.loadNextLevel();
         }
         else
             isMakingNoise = false;

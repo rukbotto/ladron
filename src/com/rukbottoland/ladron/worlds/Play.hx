@@ -24,6 +24,7 @@ class Play extends Sprite
     private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
 
     private var difficulty:Int;
+    private var isActive:Bool = false;
 
     public function new(difficulty:Int, inputManager:InputManager)
     {
@@ -33,6 +34,7 @@ class Play extends Sprite
         _childIdx = [
             "room" => [],
             "ground" => [],
+            "lobby" => [],
         ];
         this.difficulty = difficulty;
 
@@ -56,7 +58,9 @@ class Play extends Sprite
         addChild(ground);
         _childIdx["ground"].push(getChildIndex(ground));
 
-        addChild(new Lobby());
+        var lobby = new Lobby();
+        addChild(lobby);
+        _childIdx["lobby"].push(getChildIndex(lobby));
 
         generateBuilding();
         placeLoot();
@@ -64,6 +68,19 @@ class Play extends Sprite
         var thiefX = stage.stageWidth / 2 - 140;
         var thiefY = ground.y - Thief.HEIGHT;
         addChild(new Thief(thiefX, thiefY, this));
+
+        isActive = true;
+    }
+
+    public function loadNextLevel()
+    {
+        if (isActive)
+        {
+            Main.increaseLevel();
+            stage.addChildAt(new Play(Main.level, _inputManager), 1);
+            stage.removeChildAt(2);
+            isActive = false;
+        }
     }
 
     private function generateBuilding()

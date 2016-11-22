@@ -12,13 +12,12 @@ import com.rukbottoland.ladron.worlds.Play;
 class Intro extends Sprite
 {
     private var inputManager:InputManager;
-    private var isAdded:Bool;
+    private var isActive:Bool = false;
 
     public function new(inputManager:InputManager)
     {
         super();
         this.inputManager = inputManager;
-        isAdded = false;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
@@ -48,20 +47,20 @@ class Intro extends Sprite
         messageField.defaultTextFormat = textFormat;
         messageField.background = true;
         messageField.backgroundColor = 0x3a5c94;
-
         addChild(messageField);
-        isAdded = true;
+
+        isActive = true;
     }
 
     private function onEnterFrame(event:Event)
     {
         if (inputManager.inputs.space)
         {
-            if (isAdded)
+            if (isActive)
             {
                 stage.addChildAt(new Play(1, inputManager), 1);
                 stage.removeChildAt(2);
-                isAdded = false;
+                isActive = false;
             }
         }
     }
