@@ -5,6 +5,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 import com.rukbottoland.ladron.entities.Closet;
 import com.rukbottoland.ladron.entities.Floor;
@@ -19,7 +20,7 @@ class Play extends Sprite
 {
     public var inputManager(get,never):InputManager;
     private var _inputManager:InputManager;
-    private function get_inputManager() : InputManager { return _inputManager; }
+    private function get_inputManager():InputManager { return _inputManager; }
 
     public var childIdx(get,never):Map<String,Array<Int>>;
     private var _childIdx:Map<String,Array<Int>>;
@@ -27,6 +28,7 @@ class Play extends Sprite
 
     private var scoreLabel:TextField;
     private var healthLabel:TextField;
+    private var timeLabel:TextField;
 
     private var difficulty:Int;
     private var isActive:Bool = false;
@@ -55,6 +57,7 @@ class Play extends Sprite
 
         var font = Assets.getFont("font/04B_03__.ttf");
         var textFormat = new TextFormat(font.fontName, 21, 0xffffff);
+        textFormat.align = TextFormatAlign.CENTER;
 
         scoreLabel = new TextField();
         scoreLabel.width = 150;
@@ -67,6 +70,12 @@ class Play extends Sprite
         healthLabel.height = 21;
         healthLabel.defaultTextFormat = textFormat;
         stage.addChild(healthLabel);
+
+        timeLabel = new TextField();
+        timeLabel.width = 150;
+        timeLabel.height = 21;
+        timeLabel.defaultTextFormat = textFormat;
+        stage.addChild(timeLabel);
 
         var background = Assets.getBitmapData("graphics/background.png");
         graphics.beginBitmapFill(background, true);
@@ -116,12 +125,16 @@ class Play extends Sprite
     private function onEnterFrame(event:Event)
     {
         scoreLabel.text = "Score: " + thief.score;
-        scoreLabel.x = stage.stageWidth / 10 * 8;
+        scoreLabel.x = stage.stageWidth / 10 * 8 - scoreLabel.width / 2;
         scoreLabel.y = stage.stageHeight / 20;
 
         healthLabel.text = "Lifes: " + thief.health;
-        healthLabel.x = stage.stageWidth / 10;
+        healthLabel.x = stage.stageWidth / 10 * 2 - healthLabel.width / 2;
         healthLabel.y = stage.stageHeight / 20;
+
+        timeLabel.text = "Time: " + thief.time;
+        timeLabel.x = stage.stageWidth / 10 * 5 - timeLabel.width / 2;
+        timeLabel.y = stage.stageHeight / 20;
     }
 
     private function generateBuilding()

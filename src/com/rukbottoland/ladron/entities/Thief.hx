@@ -31,13 +31,17 @@ class Thief extends Sprite
     private var _health:Int = 8;
     private function get_health():Int { return _health; }
 
+    public var time(get,never):Int;
+    private var _time:Int = 0;
+    private function get_time():Int { return _time; }
+
     private var world:Play;
     private var inputs:Dynamic;
 
     private var timer:Int = 0;
-    private var tickBySec:Int = 1000;
     private var elapsed:Int = 0;
     private var lastTimer:Int = 0;
+    private var tickDown:Int = 1000;
 
     private var behaviors:Map<String,BehaviorData>;
     private var animation:AnimatedSprite;
@@ -121,14 +125,14 @@ class Thief extends Sprite
     {
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
-        tickBySec -= elapsed;
+        tickDown -= elapsed;
 
         input();
         collide();
         animate();
         update();
 
-        if (tickBySec < 0) { tickBySec = 1000; }
+        if (tickDown < 0) { tickDown = 1000; }
         lastTimer = timer;
     }
 
@@ -235,7 +239,11 @@ class Thief extends Sprite
 
     private function update()
     {
-        if (tickBySec < 0 && _score > 0) { _score -= 1; }
+        if (tickDown < 0)
+        {
+            _time += 1;
+            if (_score > 0) _score -= 1;
+        }
 
         xAccel = 0;
         yAccel = 15;
