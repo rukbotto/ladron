@@ -27,6 +27,10 @@ class Thief extends Sprite
     private var _score:Int = 60;
     private function get_score():Int { return _score; }
 
+    public var health(get,never):Int;
+    private var _health:Int = 8;
+    private function get_health():Int { return _health; }
+
     private var world:Play;
     private var inputs:Dynamic;
 

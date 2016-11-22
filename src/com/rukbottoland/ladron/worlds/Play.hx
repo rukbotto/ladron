@@ -26,6 +26,7 @@ class Play extends Sprite
     private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
 
     private var scoreLabel:TextField;
+    private var healthLabel:TextField;
 
     private var difficulty:Int;
     private var isActive:Bool = false;
@@ -61,6 +62,12 @@ class Play extends Sprite
         scoreLabel.defaultTextFormat = textFormat;
         stage.addChild(scoreLabel);
 
+        healthLabel = new TextField();
+        healthLabel.width = 150;
+        healthLabel.height = 21;
+        healthLabel.defaultTextFormat = textFormat;
+        stage.addChild(healthLabel);
+
         var background = Assets.getBitmapData("graphics/background.png");
         graphics.beginBitmapFill(background, true);
         graphics.drawRect(-1000, -200, stage.stageWidth * 10, stage.stageHeight);
@@ -93,19 +100,28 @@ class Play extends Sprite
     {
         if (isActive)
         {
+            removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+            stage.removeChild(scoreLabel);
+            stage.removeChild(healthLabel);
+
             Main.increaseLevel();
             stage.addChildAt(new Play(Main.level, _inputManager), 1);
             stage.removeChildAt(2);
+
             isActive = false;
-            removeEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
     }
 
     private function onEnterFrame(event:Event)
     {
         scoreLabel.text = "Score: " + thief.score;
-        scoreLabel.x = stage.stageWidth - 200;
-        scoreLabel.y = 50;
+        scoreLabel.x = stage.stageWidth / 10 * 8;
+        scoreLabel.y = stage.stageHeight / 20;
+
+        healthLabel.text = "Lifes: " + thief.health;
+        healthLabel.x = stage.stageWidth / 10;
+        healthLabel.y = stage.stageHeight / 20;
     }
 
     private function generateBuilding()
