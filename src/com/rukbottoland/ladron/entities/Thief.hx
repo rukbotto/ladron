@@ -41,8 +41,13 @@ class Thief extends Sprite
     private var yAccel:Float = 0;
     private var ySpeed:Float = 0;
 
-    private var isMakingNoise:Bool = false;
+    private var isGoingLeft:Bool = false;
+    private var isGoingRight:Bool = false;
+    private var isSneaking:Bool = false;
+    private var isSearching:Bool = false;
     private var isJumping:Bool = false;
+    private var isAirborne:Bool = false;
+    private var isMakingNoise:Bool = false;
 
     private var currentRoom:Room = null;
     private var currentCloset:Closet = null;
@@ -105,84 +110,51 @@ class Thief extends Sprite
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
 
-        xAccel = 0;
-        yAccel = 15;
+        input();
+        collide();
+        animate();
+        update();
 
+        lastTimer = timer;
+    }
+
+    private function input()
+    {
         if (inputs.left)
         {
-            animation.x = Thief.WIDTH;
-            animation.scaleX = -1;
-            xAccel = -1;
+            isGoingLeft = true;
+            isGoingRight = false;
         }
         else if (inputs.right)
         {
-            animation.x = 0;
-            animation.scaleX = 1;
-            xAccel = 1;
-        }
-
-        if (inputs.sneak && inputs.left || inputs.sneak && inputs.right)
-        {
-            if (animation.currentBehavior != behaviors["sneak"])
-                animation.showBehavior("sneak");
-
-            xMaxSpeed = 3;
-            isMakingNoise = false;
-
-            if (Math.random() * 100 >= 21 && Math.random() * 100 <= 22)
-                isMakingNoise = true;
-        }
-        else if (!inputs.sneak && inputs.left || !inputs.sneak && inputs.right)
-        {
-            if (animation.currentBehavior != behaviors["run"])
-                animation.showBehavior("run");
-
-            xMaxSpeed = 5;
-            isMakingNoise = true;
-        }
-        else if (inputs.search)
-        {
-            animation.showBehavior("search");
-            if (currentCloset != null && currentCloset.hasLoot)
-            {
-                lootLabel.visible = true;
-                lootLabel.x = -35;
-                lootLabel.y = -20;
-                lootLabel.width = 100;
-                lootLabel.height = 20;
-            }
+            isGoingLeft = false;
+            isGoingRight = true;
         }
         else
         {
-            animation.showBehavior("stand");
-            isMakingNoise = false;
+            isGoingLeft = false;
+            isGoingRight = false;
         }
 
-        if (inputs.up && !isJumping)
+        if (inputs.sneak) { isSneaking = true; }
+        else { isSneaking = false; }
+
+        if (inputs.search) { isSearching = true; }
+        else { isSearching = false; }
+
+        if (inputs.up && !isAirborne)
         {
-            y = yInitial - 1;
-            ySpeed = -3.8;
-            isMakingNoise = true;
             isJumping = true;
+            isAirborne = true;
         }
+    }
 
-        if (isJumping)
-        {
-            if (animation.currentBehavior != behaviors["jump"])
-                animation.showBehavior("jump");
-        }
-
-        // Collisions
-
+    private function collide()
+    {
         for (i in world.childIdx["ground"])
         {
             if (hitTestObject(world.getChildAt(i)))
-            {
-                y = yInitial;
-                yAccel = 0;
-                ySpeed = 0;
-                isJumping = false;
-            }
+                isAirborne = false;
         }
 
         currentRoom = null;
@@ -207,6 +179,96 @@ class Thief extends Sprite
                 }
             }
         }
+    }
+
+    private function animate()
+    {
+        if (isGoingLeft)
+        {
+            animation.x = Thief.WIDTH;
+            animation.scaleX = -1;
+        }
+        else if (isGoingRight)
+        {
+            animation.x = 0;
+            animation.scaleX = 1;
+        }
+
+        if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
+        {
+            if (animation.currentBehavior != behaviors["sneak"])
+                animation.showBehavior("sneak");
+        }
+        else if (!isSneaking && isGoingLeft || !isSneaking && isGoingRight)
+        {
+            if (animation.currentBehavior != behaviors["run"])
+                animation.showBehavior("run");
+        }
+        else if (inputs.search)
+            animation.showBehavior("search");
+        else
+            animation.showBehavior("stand");
+
+        if (isAirborne)
+        {
+            if (animation.currentBehavior != behaviors["jump"])
+                animation.showBehavior("jump");
+        }
+
+        animation.update(elapsed);
+    }
+
+    private function update()
+    {
+        xAccel = 0;
+        yAccel = 15;
+
+        if (isGoingLeft)
+            xAccel = -1;
+        else if (isGoingRight)
+            xAccel = 1;
+
+        if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
+        {
+            xMaxSpeed = 3;
+            isMakingNoise = false;
+
+            if (Math.random() * 100 >= 21 && Math.random() * 100 <= 22)
+                isMakingNoise = true;
+        }
+        else if (!isSneaking && isGoingLeft || !isSneaking && isGoingRight)
+        {
+            xMaxSpeed = 5;
+            isMakingNoise = true;
+        }
+        else if (isSearching)
+        {
+            if (currentCloset != null && currentCloset.hasLoot)
+            {
+                lootLabel.visible = true;
+                lootLabel.x = -35;
+                lootLabel.y = -20;
+                lootLabel.width = 100;
+                lootLabel.height = 20;
+            }
+        }
+        else
+            isMakingNoise = false;
+
+        if (!isAirborne)
+        {
+            y = yInitial;
+            yAccel = 0;
+            ySpeed = 0;
+        }
+
+        if (isJumping)
+        {
+            y = yInitial - 1;
+            ySpeed = -3.8;
+            isMakingNoise = true;
+            isJumping = false;
+        }
 
         xSpeed += xAccel * 3;
         if (Math.abs(xSpeed) > xMaxSpeed)
@@ -220,8 +282,5 @@ class Thief extends Sprite
 
         ySpeed += yAccel * (elapsed / 1000);
         y += ySpeed;
-
-        animation.update(elapsed);
-        lastTimer = timer;
     }
 }
