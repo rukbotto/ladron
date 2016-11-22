@@ -23,14 +23,20 @@ class Thief extends Sprite
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
 
+    public var score(get,never):Int;
+    private var _score:Int = 60;
+    private function get_score():Int { return _score; }
+
     private var world:Play;
     private var inputs:Dynamic;
 
-    private var behaviors:Map<String,BehaviorData>;
-    private var animation:AnimatedSprite;
     private var timer:Int = 0;
+    private var tickBySec:Int = 1000;
     private var elapsed:Int = 0;
     private var lastTimer:Int = 0;
+
+    private var behaviors:Map<String,BehaviorData>;
+    private var animation:AnimatedSprite;
 
     private var lootLabel:TextField;
 
@@ -90,14 +96,13 @@ class Thief extends Sprite
         spritesheet.addBehavior(behaviors["stand"]);
         spritesheet.addBehavior(behaviors["jump"]);
         spritesheet.addBehavior(behaviors["search"]);
-
         animation = new AnimatedSprite(spritesheet, true);
         animation.showBehavior("stand");
-
         addChild(animation);
 
         var font = Assets.getFont("font/04B_03__.ttf");
         var textFormat = new TextFormat(font.fontName, 14, 0xffffff);
+
         lootLabel = new TextField();
         lootLabel.visible = false;
         lootLabel.text = "Loot Found!";
@@ -105,7 +110,6 @@ class Thief extends Sprite
         lootLabel.height = 0;
         lootLabel.wordWrap = true;
         lootLabel.defaultTextFormat = textFormat;
-
         addChild(lootLabel);
     }
 
@@ -113,12 +117,14 @@ class Thief extends Sprite
     {
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
+        tickBySec -= elapsed;
 
         input();
         collide();
         animate();
         update();
 
+        if (tickBySec < 0) { tickBySec = 1000; }
         lastTimer = timer;
     }
 
@@ -225,6 +231,8 @@ class Thief extends Sprite
 
     private function update()
     {
+        if (tickBySec < 0 && _score > 0) { _score -= 1; }
+
         xAccel = 0;
         yAccel = 15;
 

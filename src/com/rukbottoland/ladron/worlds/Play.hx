@@ -3,6 +3,8 @@ package com.rukbottoland.ladron.worlds;
 import openfl.Assets;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 import com.rukbottoland.ladron.entities.Closet;
 import com.rukbottoland.ladron.entities.Floor;
@@ -23,8 +25,12 @@ class Play extends Sprite
     private var _childIdx:Map<String,Array<Int>>;
     private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
 
+    private var scoreLabel:TextField;
+
     private var difficulty:Int;
     private var isActive:Bool = false;
+
+    private var thief:Thief;
 
     public function new(difficulty:Int, inputManager:InputManager)
     {
@@ -44,6 +50,16 @@ class Play extends Sprite
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+        addEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        var font = Assets.getFont("font/04B_03__.ttf");
+        var textFormat = new TextFormat(font.fontName, 21, 0xffffff);
+
+        scoreLabel = new TextField();
+        scoreLabel.width = 150;
+        scoreLabel.height = 21;
+        scoreLabel.defaultTextFormat = textFormat;
+        stage.addChild(scoreLabel);
 
         var background = Assets.getBitmapData("graphics/background.png");
         graphics.beginBitmapFill(background, true);
@@ -67,7 +83,8 @@ class Play extends Sprite
 
         var thiefX = stage.stageWidth / 2 - 140;
         var thiefY = ground.y - Thief.HEIGHT;
-        addChild(new Thief(thiefX, thiefY, this));
+        thief = new Thief(thiefX, thiefY, this);
+        addChild(thief);
 
         isActive = true;
     }
@@ -80,7 +97,15 @@ class Play extends Sprite
             stage.addChildAt(new Play(Main.level, _inputManager), 1);
             stage.removeChildAt(2);
             isActive = false;
+            removeEventListener(Event.ENTER_FRAME, onEnterFrame);
         }
+    }
+
+    private function onEnterFrame(event:Event)
+    {
+        scoreLabel.text = "Score: " + thief.score;
+        scoreLabel.x = stage.stageWidth - 200;
+        scoreLabel.y = 50;
     }
 
     private function generateBuilding()
