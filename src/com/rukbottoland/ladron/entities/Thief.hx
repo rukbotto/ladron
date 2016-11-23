@@ -9,6 +9,7 @@ import com.rukbottoland.ladron.Main;
 import com.rukbottoland.ladron.entities.Closet;
 import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
+import com.rukbottoland.ladron.utils.Score;
 import com.rukbottoland.ladron.utils.Tools;
 import com.rukbottoland.ladron.worlds.Play;
 
@@ -20,10 +21,6 @@ class Thief extends Sprite
 {
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
-
-    public var score(get,never):Int;
-    private var _score:Int = 60;
-    private function get_score():Int { return _score; }
 
     public var health(get,never):Int;
     private var _health:Int = 8;
@@ -39,6 +36,7 @@ class Thief extends Sprite
 
     private var world:Play;
     private var inputs:Dynamic;
+    private var score:Score;
 
     private var timer:Int = 0;
     private var elapsed:Int = 0;
@@ -77,6 +75,7 @@ class Thief extends Sprite
 
         this.world = world;
         inputs = world.inputManager.inputs;
+        score = world.score;
         this.x = x;
         this.y = y;
         yInitial = y;
@@ -244,7 +243,7 @@ class Thief extends Sprite
         if (tickDown < 0)
         {
             _time += 1;
-            if (_score > 0) _score -= 1;
+            if (score.points > 0) score.points -= 1;
         }
 
         xAccel = 0;
@@ -270,11 +269,17 @@ class Thief extends Sprite
         }
         else if (isSearching)
         {
-            if (collideCloset != null && collideCloset.hasLoot)
+            if (collideCloset != null && collideCloset.hasLoot && !_hasFoundLoot)
+            {
+                score.points += 1000;
                 _hasFoundLoot = true;
+            }
 
-            if (lobby != null && _hasFoundLoot)
-                world.loadNextLevel();
+            if (lobby != null)
+            {
+                if (_hasFoundLoot) world.loadNextLevel();
+                else score.points -= 100;
+            }
         }
         else
             isMakingNoise = false;

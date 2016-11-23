@@ -15,6 +15,7 @@ import com.rukbottoland.ladron.entities.Room;
 import com.rukbottoland.ladron.entities.Thief;
 import com.rukbottoland.ladron.entities.Wall;
 import com.rukbottoland.ladron.utils.InputManager;
+import com.rukbottoland.ladron.utils.Score;
 
 class Play extends Sprite
 {
@@ -26,6 +27,10 @@ class Play extends Sprite
     private var _childIdx:Map<String,Array<Int>>;
     private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
 
+    public var score(get,never):Score;
+    private var _score:Score;
+    private function get_score():Score { return _score; }
+
     private var scoreLabel:TextField;
     private var healthLabel:TextField;
     private var timeLabel:TextField;
@@ -36,7 +41,7 @@ class Play extends Sprite
 
     private var thief:Thief;
 
-    public function new(difficulty:Int, inputManager:InputManager)
+    public function new(difficulty:Int, points:Int, inputManager:InputManager)
     {
         super();
 
@@ -47,6 +52,7 @@ class Play extends Sprite
             "ground" => [],
             "lobby" => [],
         ];
+        _score = new Score(points);
         this.difficulty = difficulty;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -130,7 +136,7 @@ class Play extends Sprite
             stage.removeChild(lootLabel);
 
             Main.increaseLevel();
-            stage.addChildAt(new Play(Main.level, _inputManager), 1);
+            stage.addChildAt(new Play(Main.level, score.points, _inputManager), 1);
             stage.removeChild(this);
 
             isActive = false;
@@ -139,7 +145,7 @@ class Play extends Sprite
 
     private function onEnterFrame(event:Event)
     {
-        scoreLabel.text = "Score: " + thief.score;
+        scoreLabel.text = "Score: " + _score.points;
         scoreLabel.x = stage.stageWidth / 10 * 8 - scoreLabel.width / 2;
         scoreLabel.y = stage.stageHeight / 20;
 
