@@ -17,6 +17,7 @@ class InputManager
             left: false,
             right: false,
             up: false,
+            down: false,
             search: false,
         };
     }
@@ -38,6 +39,9 @@ class InputManager
         if (event.keyCode == Keyboard.UP)
             _inputs.up = true;
 
+        if (event.keyCode == Keyboard.DOWN)
+            _inputs.down = true;
+
         if (event.keyCode == Keyboard.X)
             _inputs.search = true;
     }
@@ -58,6 +62,9 @@ class InputManager
 
         if (event.keyCode == Keyboard.UP)
             _inputs.up = false;
+
+        if (event.keyCode == Keyboard.DOWN)
+            _inputs.down = false;
 
         if (event.keyCode == Keyboard.X)
             _inputs.search = false;

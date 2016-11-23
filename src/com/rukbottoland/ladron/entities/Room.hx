@@ -23,7 +23,10 @@ class Room extends Sprite
     {
         super();
 
-        _childIdx = [ "closet" => [] ];
+        _childIdx = [
+            "closet" => [],
+            "stair" => [],
+        ];
         this.x = x;
         this.y = y;
         stairUp = false;
@@ -47,17 +50,34 @@ class Room extends Sprite
 
     private function setup()
     {
+        var stair = null;
         if (stairUp && stairBack)
-            addChild(new Stair(Room.WIDTH - Stair.WIDTH, 0));
+        {
+            stair = new Stair(Room.WIDTH - Stair.WIDTH, 0);
+            addChild(stair);
+            _childIdx["stair"].push(getChildIndex(stair));
+        }
 
         if (stairUp && stairFront)
-            addChild(new Stair(0, 0));
+        {
+            stair = new Stair(0, 0);
+            addChild(stair);
+            _childIdx["stair"].push(getChildIndex(stair));
+        }
 
         if (stairDown && stairBack)
-            addChild(new Stair(Room.WIDTH - Stair.WIDTH, 0, false));
+        {
+            stair = new Stair(Room.WIDTH - Stair.WIDTH, 0, false);
+            addChild(stair);
+            _childIdx["stair"].push(getChildIndex(stair));
+        }
 
         if (stairDown && stairFront)
-            addChild(new Stair(0, 0, false));
+        {
+            stair = new Stair(0, 0, false);
+            addChild(stair);
+            _childIdx["stair"].push(getChildIndex(stair));
+        }
 
         var closetX = Math.random() * (Room.WIDTH - Closet.WIDTH);
         var closetY = Room.HEIGHT - Closet.HEIGHT;

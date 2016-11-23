@@ -62,12 +62,14 @@ class Thief extends Sprite
     private var isSneaking:Bool = false;
     private var isSearching:Bool = false;
     private var isJumping:Bool = false;
+    private var isCrouching:Bool = false;
     private var isAirborne:Bool = false;
     private var isMakingNoise:Bool = false;
 
     private var lobby:Lobby = null;
-    private var currentRoom:Room = null;
-    private var currentCloset:Closet = null;
+    private var collideRoom:Room = null;
+    private var collideCloset:Closet = null;
+    private var collideStair:Stair = null;
 
     public function new(x:Float, y:Float, world:Play)
     {
@@ -141,25 +143,31 @@ class Thief extends Sprite
             isGoingRight = false;
         }
 
-        if (inputs.sneak) { isSneaking = true; }
-        else { isSneaking = false; }
+        if (inputs.sneak) isSneaking = true;
+        else isSneaking = false;
 
-        if (inputs.search) { isSearching = true; }
-        else { isSearching = false; }
+        if (inputs.search) isSearching = true;
+        else isSearching = false;
 
         if (inputs.up && !isAirborne)
         {
             isJumping = true;
             isAirborne = true;
         }
+
+        if (inputs.down && !isCrouching) isCrouching = true;
     }
 
     private function collide()
     {
         for (i in world.childIdx["ground"])
         {
-            if (hitTestObject(world.getChildAt(i)))
-                isAirborne = false;
+            if (hitTestObject(world.getChildAt(i))) isAirborne = false;
+        }
+
+        for (i in world.childIdx["floor"])
+        {
+            if (hitTestObject(world.getChildAt(i))) isAirborne = false;
         }
 
         for (i in world.childIdx["lobby"])
@@ -171,18 +179,25 @@ class Thief extends Sprite
 
         for (i in world.childIdx["room"])
         {
-            currentRoom = cast(world.getChildAt(i), Room);
-            if (hitTestObject(currentRoom)) break;
-            currentRoom = null;
+            collideRoom = cast(world.getChildAt(i), Room);
+            if (hitTestObject(collideRoom)) break;
+            collideRoom = null;
         }
 
-        if (currentRoom != null)
+        if (collideRoom != null)
         {
-            for (i in currentRoom.childIdx["closet"])
+            for (i in collideRoom.childIdx["closet"])
             {
-                currentCloset = cast(currentRoom.getChildAt(i), Closet);
-                if (hitTestObject(currentCloset)) break;
-                currentCloset = null;
+                collideCloset = cast(collideRoom.getChildAt(i), Closet);
+                if (hitTestObject(collideCloset)) break;
+                collideCloset = null;
+            }
+
+            for (i in collideRoom.childIdx["stair"])
+            {
+                collideStair = cast(collideRoom.getChildAt(i), Stair);
+                if (hitTestObject(collideStair)) break;
+                collideStair = null;
             }
         }
     }
@@ -255,7 +270,7 @@ class Thief extends Sprite
         }
         else if (isSearching)
         {
-            if (currentCloset != null && currentCloset.hasLoot)
+            if (collideCloset != null && collideCloset.hasLoot)
                 _hasFoundLoot = true;
 
             if (lobby != null && _hasFoundLoot)
@@ -273,10 +288,31 @@ class Thief extends Sprite
 
         if (isJumping)
         {
-            y = yInitial - 1;
-            ySpeed = -3.8;
-            isMakingNoise = true;
+            if (collideStair != null && collideStair.up)
+            {
+                y -= (collideRoom.height + Floor.HEIGHT);
+                yInitial = y;
+                isMakingNoise = false;
+            }
+            else
+            {
+                y = yInitial - 1;
+                ySpeed = -3.8;
+                isMakingNoise = true;
+            }
+
             isJumping = false;
+        }
+        else if (isCrouching)
+        {
+            if (collideStair != null && !collideStair.up)
+            {
+                y += (collideRoom.height + Floor.HEIGHT);
+                yInitial = y;
+                isMakingNoise = false;
+            }
+
+            isCrouching = false;
         }
 
         xSpeed += xAccel * 3;

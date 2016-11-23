@@ -5,14 +5,18 @@ import openfl.events.Event;
 
 class Floor extends Sprite
 {
-    public static inline var WIDTH:Float = 210;
     public static inline var HEIGHT:Float = 5;
 
-    public function new(x:Float, y:Float)
+    private var _width:Float;
+
+    public function new(x:Float, y:Float, width:Float)
     {
         super();
+
         this.x = x;
         this.y = y;
+        _width = width;
+
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
@@ -21,7 +25,7 @@ class Floor extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
         graphics.beginFill(0x000000);
-        graphics.drawRect(0, 0, Floor.WIDTH, Floor.HEIGHT);
+        graphics.drawRect(0, 0, _width, Floor.HEIGHT);
         graphics.endFill();
     }
 }

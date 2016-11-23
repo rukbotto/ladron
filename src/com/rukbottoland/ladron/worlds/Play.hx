@@ -43,6 +43,7 @@ class Play extends Sprite
         _inputManager = inputManager;
         _childIdx = [
             "room" => [],
+            "floor" => [],
             "ground" => [],
             "lobby" => [],
         ];
@@ -168,6 +169,7 @@ class Play extends Sprite
         var roomY = 0.0;
         var floorX = 0.0;
         var floorY = 0.0;
+        var floorWidth = 0.0;
 
         for (i in 0...floors)
         {
@@ -194,11 +196,14 @@ class Play extends Sprite
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
                 addChild(new Wall(wallX, wallY));
-
-                floorX = x + j * Wall.WIDTH + j * Room.WIDTH;
-                floorY = y - (i + 1) * Room.HEIGHT - (i + 1) * Floor.HEIGHT;
-                addChild(new Floor(floorX, floorY));
             }
+
+            floorX = x;
+            floorY = y - (i + 1) * Room.HEIGHT - (i + 1) * Floor.HEIGHT;
+            floorWidth = Room.WIDTH * rooms + Wall.WIDTH * (rooms + 1);
+            var floor = new Floor(floorX, floorY, floorWidth);
+            addChild(floor);
+            _childIdx["floor"].push(getChildIndex(floor));
         }
     }
 
