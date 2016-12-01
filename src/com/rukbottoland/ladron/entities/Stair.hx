@@ -9,14 +9,16 @@ class Stair extends Sprite
     public static inline var WIDTH:Float = 15;
     public static inline var HEIGHT:Float = 60;
 
-    private var up:Bool;
+    public var up(get,never):Bool;
+    private var _up:Bool;
+    private function get_up():Bool { return _up; }
 
     public function new(x:Float, y:Float, up:Bool = true)
     {
         super();
         this.x = x;
         this.y = y;
-        this.up = up;
+        _up = up;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
@@ -25,10 +27,8 @@ class Stair extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
         var bitmapData = null;
-        if (up)
-            bitmapData = Assets.getBitmapData("graphics/stairs_up.png");
-        else
-            bitmapData = Assets.getBitmapData("graphics/stairs_down.png");
+        if (_up) bitmapData = Assets.getBitmapData("graphics/stairs_up.png");
+        else bitmapData = Assets.getBitmapData("graphics/stairs_down.png");
 
         graphics.beginBitmapFill(bitmapData);
         graphics.drawRect(0, 0, Stair.WIDTH, Stair.HEIGHT);

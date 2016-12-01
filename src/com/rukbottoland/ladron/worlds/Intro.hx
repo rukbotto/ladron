@@ -1,5 +1,6 @@
 package com.rukbottoland.ladron.worlds;
 
+import openfl.Assets;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.text.TextField;
@@ -11,17 +12,16 @@ import com.rukbottoland.ladron.worlds.Play;
 class Intro extends Sprite
 {
     private var inputManager:InputManager;
-    private var isAdded:Bool;
+    private var isActive:Bool = false;
 
     public function new(inputManager:InputManager)
     {
         super();
         this.inputManager = inputManager;
-        isAdded = false;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
-    public function onAddedToStage(event:Event)
+    private function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -37,28 +37,30 @@ class Intro extends Sprite
             "If you found the loot, go to the pagoda and press <X> to advance the next level.\n\n" +
             "Press space bar to start the game!";
 
-        var textFormat = new TextFormat("Arial", 24, 0xFFFFFF);
-
+        var font = Assets.getFont("font/04B_03__.ttf");
+        var textFormat = new TextFormat(font.fontName, 32, 0xffffff);
         var messageField = new TextField();
         messageField.text = message;
         messageField.width = stage.stageWidth;
         messageField.height = stage.stageHeight;
         messageField.wordWrap = true;
         messageField.defaultTextFormat = textFormat;
-
+        messageField.background = true;
+        messageField.backgroundColor = 0x3a5c94;
         addChild(messageField);
-        isAdded = true;
+
+        isActive = true;
     }
 
-    public function onEnterFrame(event:Event)
+    private function onEnterFrame(event:Event)
     {
         if (inputManager.inputs.space)
         {
-            if (isAdded)
+            if (isActive)
             {
-                stage.addChildAt(new Play(1, inputManager), 1);
-                stage.removeChildAt(2);
-                isAdded = false;
+                stage.addChildAt(new Play(1, 0, inputManager), 1);
+                stage.removeChild(this);
+                isActive = false;
             }
         }
     }
