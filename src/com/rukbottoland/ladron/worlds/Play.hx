@@ -1,6 +1,7 @@
 package com.rukbottoland.ladron.worlds;
 
 import openfl.Assets;
+import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.text.TextField;
@@ -23,9 +24,12 @@ class Play extends Sprite
     private var _inputManager:InputManager;
     private function get_inputManager():InputManager { return _inputManager; }
 
-    public var childIdx(get,never):Map<String,Array<Int>>;
-    private var _childIdx:Map<String,Array<Int>>;
-    private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
+    public var childByType(get,never):Map<String,Array<DisplayObject>>;
+    private var _childByType:Map<String,Array<DisplayObject>>;
+    private function get_childByType():Map<String,Array<DisplayObject>>
+    {
+        return _childByType;
+    }
 
     public var score(get,never):Score;
     private var _score:Score;
@@ -46,11 +50,12 @@ class Play extends Sprite
         super();
 
         _inputManager = inputManager;
-        _childIdx = [
+        _childByType = [
             "room" => [],
             "floor" => [],
             "ground" => [],
             "lobby" => [],
+            "wall" => [],
         ];
         _score = new Score(points);
         this.difficulty = difficulty;
@@ -105,11 +110,11 @@ class Play extends Sprite
 
         var ground = new Ground();
         addChild(ground);
-        _childIdx["ground"].push(getChildIndex(ground));
+        _childByType["ground"].push(ground);
 
         var lobby = new Lobby();
         addChild(lobby);
-        _childIdx["lobby"].push(getChildIndex(lobby));
+        _childByType["lobby"].push(lobby);
 
         generateBuilding();
         placeLoot();
@@ -181,7 +186,9 @@ class Play extends Sprite
         {
             wallX = x;
             wallY = y - (i + 1) * Wall.HEIGHT - i * Floor.HEIGHT;
-            addChild(new Wall(wallX, wallY));
+            var wall = new Wall(wallX, wallY);
+            addChild(wall);
+            _childByType["wall"].push(wall);
 
             for (j in 0...rooms)
             {
@@ -197,11 +204,13 @@ class Play extends Sprite
                 else if (j == 0 && i % 2 == 0 && i > 0)
                     room.setStairDownFront();
                 addChild(room);
-                _childIdx["room"].push(getChildIndex(room));
+                _childByType["room"].push(room);
 
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
-                addChild(new Wall(wallX, wallY));
+                wall = new Wall(wallX, wallY);
+                addChild(wall);
+                _childByType["wall"].push(wall);
             }
 
             floorX = x;
@@ -209,15 +218,15 @@ class Play extends Sprite
             floorWidth = Room.WIDTH * rooms + Wall.WIDTH * (rooms + 1);
             var floor = new Floor(floorX, floorY, floorWidth);
             addChild(floor);
-            _childIdx["floor"].push(getChildIndex(floor));
+            _childByType["floor"].push(floor);
         }
     }
 
     private function placeLoot()
     {
-        var totalRooms = _childIdx["room"].length;
+        var totalRooms = _childByType["room"].length;
         var random = Math.round(Math.random() * (totalRooms - 1.0));
-        var room = cast(getChildAt(_childIdx["room"][random]), Room);
+        var room = cast(_childByType["room"][random], Room);
         for (i in room.childIdx["closet"])
             cast(room.getChildAt(i), Closet).hasLoot = true;
     }

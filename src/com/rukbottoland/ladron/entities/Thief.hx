@@ -159,26 +159,26 @@ class Thief extends Sprite
 
     private function collide()
     {
-        for (i in world.childIdx["ground"])
+        for (object in world.childByType["ground"])
         {
-            if (hitTestObject(world.getChildAt(i))) isAirborne = false;
+            if (hitTestObject(object)) isAirborne = false;
         }
 
-        for (i in world.childIdx["floor"])
+        for (object in world.childByType["floor"])
         {
-            if (hitTestObject(world.getChildAt(i))) isAirborne = false;
+            if (hitTestObject(object)) isAirborne = false;
         }
 
-        for (i in world.childIdx["lobby"])
+        for (object in world.childByType["lobby"])
         {
-            lobby = cast(world.getChildAt(i), Lobby);
+            lobby = cast(object, Lobby);
             if (hitTestObject(lobby)) break;
             lobby = null;
         }
 
-        for (i in world.childIdx["room"])
+        for (object in world.childByType["room"])
         {
-            collideRoom = cast(world.getChildAt(i), Room);
+            collideRoom = cast(object, Room);
             if (hitTestObject(collideRoom)) break;
             collideRoom = null;
         }
