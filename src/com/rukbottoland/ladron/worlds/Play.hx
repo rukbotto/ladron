@@ -227,7 +227,7 @@ class Play extends Sprite
         var totalRooms = _childByType["room"].length;
         var random = Math.round(Math.random() * (totalRooms - 1.0));
         var room = cast(_childByType["room"][random], Room);
-        for (i in room.childIdx["closet"])
-            cast(room.getChildAt(i), Closet).hasLoot = true;
+        for (object in room.childByType["closet"])
+            cast(object, Closet).hasLoot = true;
     }
 }

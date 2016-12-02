@@ -1,5 +1,6 @@
 package com.rukbottoland.ladron.entities;
 
+import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 
@@ -10,9 +11,12 @@ class Room extends Sprite
     public static inline var WIDTH:Float = 200;
     public static inline var HEIGHT:Float = 60;
 
-    public var childIdx(get,never):Map<String,Array<Int>>;
-    private var _childIdx:Map<String,Array<Int>>;
-    private function get_childIdx():Map<String,Array<Int>> { return _childIdx; }
+    public var childByType(get,never):Map<String,Array<DisplayObject>>;
+    private var _childByType:Map<String,Array<DisplayObject>>;
+    private function get_childByType():Map<String,Array<DisplayObject>>
+    {
+        return _childByType;
+    }
 
     private var stairUp:Bool;
     private var stairDown:Bool;
@@ -23,7 +27,7 @@ class Room extends Sprite
     {
         super();
 
-        _childIdx = [
+        _childByType = [
             "closet" => [],
             "stair" => [],
         ];
@@ -55,35 +59,35 @@ class Room extends Sprite
         {
             stair = new Stair(Room.WIDTH - Stair.WIDTH, 0);
             addChild(stair);
-            _childIdx["stair"].push(getChildIndex(stair));
+            _childByType["stair"].push(stair);
         }
 
         if (stairUp && stairFront)
         {
             stair = new Stair(0, 0);
             addChild(stair);
-            _childIdx["stair"].push(getChildIndex(stair));
+            _childByType["stair"].push(stair);
         }
 
         if (stairDown && stairBack)
         {
             stair = new Stair(Room.WIDTH - Stair.WIDTH, 0, false);
             addChild(stair);
-            _childIdx["stair"].push(getChildIndex(stair));
+            _childByType["stair"].push(stair);
         }
 
         if (stairDown && stairFront)
         {
             stair = new Stair(0, 0, false);
             addChild(stair);
-            _childIdx["stair"].push(getChildIndex(stair));
+            _childByType["stair"].push(stair);
         }
 
         var closetX = Math.random() * (Room.WIDTH - Closet.WIDTH);
         var closetY = Room.HEIGHT - Closet.HEIGHT;
         var closet = new Closet(closetX, closetY);
         addChild(closet);
-        _childIdx["closet"].push(getChildIndex(closet));
+        _childByType["closet"].push(closet);
 
         var bedX = Math.random() * (Room.WIDTH - Bed.WIDTH);
         var bedY = Room.HEIGHT - Bed.HEIGHT;

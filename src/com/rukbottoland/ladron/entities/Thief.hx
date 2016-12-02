@@ -185,16 +185,16 @@ class Thief extends Sprite
 
         if (collideRoom != null)
         {
-            for (i in collideRoom.childIdx["closet"])
+            for (object in collideRoom.childByType["closet"])
             {
-                collideCloset = cast(collideRoom.getChildAt(i), Closet);
+                collideCloset = cast(object, Closet);
                 if (hitTestObject(collideCloset)) break;
                 collideCloset = null;
             }
 
-            for (i in collideRoom.childIdx["stair"])
+            for (object in collideRoom.childByType["stair"])
             {
-                collideStair = cast(collideRoom.getChildAt(i), Stair);
+                collideStair = cast(object, Stair);
                 if (hitTestObject(collideStair)) break;
                 collideStair = null;
             }
