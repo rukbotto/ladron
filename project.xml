@@ -2,7 +2,7 @@
 <project>
 	<meta title="ladron" package="com.rukbottoland.ladron" version="0.0.1" company="" />
 
- 	<app file="Main" main="com.rukbottoland.ladron.Main" path="bin" />
+	<app file="Main" main="com.rukbottoland.ladron.Main" path="bin" />
 
 	<window fps="60" background="0x333333" />
 	<window width="1024" height="768" resizable="true" unless="mobile" />
@@ -13,6 +13,9 @@
 
 	<haxelib name="openfl" />
 	<haxelib name="spritesheet" />
+	<haxelib name="hxtelemetry" if="telemetry" />
+	<haxedef name="HXCPP_STACK_TRACE" if="telemetry" />
+	<haxedef name="HXCPP_TELEMETRY" if="telemetry" />
 
 	<assets path="assets/graphics" rename="graphics" include="*.png|*.jpg" />
 	<assets path="assets/audio" rename="audio" include="*.mp3" if="flash" />

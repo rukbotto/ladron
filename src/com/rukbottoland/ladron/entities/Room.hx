@@ -41,6 +41,17 @@ class Room extends Sprite
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
+    public function destroy()
+    {
+        for (object in _childByType["closet"]) removeChild(object);
+        for (object in _childByType["stair"]) removeChild(object);
+
+        _childByType = [
+            "closet" => [],
+            "stair" => [],
+        ];
+    }
+
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

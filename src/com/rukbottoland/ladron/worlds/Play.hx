@@ -63,6 +63,41 @@ class Play extends Sprite
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
+    public function destroy()
+    {
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        _inputManager = null;
+        _score = null;
+
+        for (object in _childByType["room"])
+        {
+            cast(object, Room).destroy();
+            removeChild(object);
+        }
+
+        for (object in _childByType["floor"]) removeChild(object);
+        for (object in _childByType["ground"]) removeChild(object);
+        for (object in _childByType["lobby"]) removeChild(object);
+        for (object in _childByType["wall"]) removeChild(object);
+
+        _childByType = [
+            "room" => [],
+            "floor" => [],
+            "ground" => [],
+            "lobby" => [],
+            "wall" => [],
+        ];
+
+        removeChild(thief);
+
+        stage.removeChild(scoreLabel);
+        stage.removeChild(healthLabel);
+        stage.removeChild(timeLabel);
+        stage.removeChild(lootLabel);
+        stage.removeChild(this);
+    }
+
     public function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -133,17 +168,9 @@ class Play extends Sprite
     {
         if (isActive)
         {
-            removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-            stage.removeChild(scoreLabel);
-            stage.removeChild(healthLabel);
-            stage.removeChild(timeLabel);
-            stage.removeChild(lootLabel);
-
             Main.increaseLevel();
             stage.addChildAt(new Play(Main.level, score.points, _inputManager), 1);
-            stage.removeChild(this);
-
+            destroy();
             isActive = false;
         }
     }
