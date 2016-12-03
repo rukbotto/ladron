@@ -67,13 +67,10 @@ class Play extends Sprite
     {
         removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        _inputManager = null;
-        _score = null;
-
         for (object in _childByType["room"])
         {
-            cast(object, Room).destroy();
             removeChild(object);
+            cast(object, Room).destroy();
         }
 
         for (object in _childByType["floor"]) removeChild(object);
@@ -81,21 +78,23 @@ class Play extends Sprite
         for (object in _childByType["lobby"]) removeChild(object);
         for (object in _childByType["wall"]) removeChild(object);
 
-        _childByType = [
-            "room" => [],
-            "floor" => [],
-            "ground" => [],
-            "lobby" => [],
-            "wall" => [],
-        ];
-
         removeChild(thief);
+        thief.destroy();
 
         stage.removeChild(scoreLabel);
         stage.removeChild(healthLabel);
         stage.removeChild(timeLabel);
         stage.removeChild(lootLabel);
         stage.removeChild(this);
+
+        _childByType = null;
+        _inputManager = null;
+        _score = null;
+        scoreLabel = null;
+        healthLabel = null;
+        timeLabel = null;
+        lootLabel = null;
+        thief = null;
     }
 
     public function onAddedToStage(event:Event)

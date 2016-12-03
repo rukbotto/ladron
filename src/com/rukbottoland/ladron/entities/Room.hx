@@ -43,13 +43,19 @@ class Room extends Sprite
 
     public function destroy()
     {
-        for (object in _childByType["closet"]) removeChild(object);
-        for (object in _childByType["stair"]) removeChild(object);
+        for (object in _childByType["closet"])
+        {
+            removeChild(object);
+            object = null;
+        }
 
-        _childByType = [
-            "closet" => [],
-            "stair" => [],
-        ];
+        for (object in _childByType["stair"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        _childByType = null;
     }
 
     public function onAddedToStage(event:Event)

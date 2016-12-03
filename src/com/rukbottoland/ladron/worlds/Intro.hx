@@ -12,6 +12,7 @@ import com.rukbottoland.ladron.worlds.Play;
 class Intro extends Sprite
 {
     private var inputManager:InputManager;
+    private var messageField:TextField;
     private var isActive:Bool = false;
 
     public function new(inputManager:InputManager)
@@ -19,6 +20,15 @@ class Intro extends Sprite
         super();
         this.inputManager = inputManager;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+    }
+
+    public function destroy()
+    {
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+        removeChild(messageField);
+        stage.removeChild(this);
+        inputManager = null;
+        messageField = null;
     }
 
     private function onAddedToStage(event:Event)
@@ -39,7 +49,7 @@ class Intro extends Sprite
 
         var font = Assets.getFont("font/04B_03__.ttf");
         var textFormat = new TextFormat(font.fontName, 32, 0xffffff);
-        var messageField = new TextField();
+        messageField = new TextField();
         messageField.text = message;
         messageField.width = stage.stageWidth;
         messageField.height = stage.stageHeight;
@@ -59,7 +69,7 @@ class Intro extends Sprite
             if (isActive)
             {
                 stage.addChildAt(new Play(1, 0, inputManager), 1);
-                stage.removeChild(this);
+                destroy();
                 isActive = false;
             }
         }

@@ -64,7 +64,9 @@ class Thief extends Sprite
     private var isAirborne:Bool = false;
     private var isMakingNoise:Bool = false;
 
-    private var lobby:Lobby = null;
+    private var collideGround:Ground = null;
+    private var collideFloor:Floor = null;
+    private var collideLobby:Lobby = null;
     private var collideRoom:Room = null;
     private var collideCloset:Closet = null;
     private var collideStair:Stair = null;
@@ -81,6 +83,26 @@ class Thief extends Sprite
         yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+    }
+
+    public function destroy()
+    {
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        removeChild(animation);
+
+        world = null;
+        inputs = null;
+        score = null;
+        behaviors = null;
+        animation = null;
+
+        collideGround = null;
+        collideFloor = null;
+        collideLobby = null;
+        collideRoom = null;
+        collideCloset = null;
+        collideStair = null;
     }
 
     private function onAddedToStage(event:Event)
@@ -117,8 +139,8 @@ class Thief extends Sprite
 
         input();
         collide();
-        animate();
         update();
+        animate();
 
         if (tickDown < 0) { tickDown = 1000; }
         lastTimer = timer;
@@ -161,19 +183,23 @@ class Thief extends Sprite
     {
         for (object in world.childByType["ground"])
         {
-            if (hitTestObject(object)) isAirborne = false;
+            collideGround = cast(object, Ground);
+            if (hitTestObject(collideGround)) break;
+            collideGround = null;
         }
 
         for (object in world.childByType["floor"])
         {
-            if (hitTestObject(object)) isAirborne = false;
+            collideFloor = cast(object, Floor);
+            if (hitTestObject(object)) break;
+            collideFloor = null;
         }
 
         for (object in world.childByType["lobby"])
         {
-            lobby = cast(object, Lobby);
-            if (hitTestObject(lobby)) break;
-            lobby = null;
+            collideLobby = cast(object, Lobby);
+            if (hitTestObject(collideLobby)) break;
+            collideLobby = null;
         }
 
         for (object in world.childByType["room"])
@@ -203,6 +229,8 @@ class Thief extends Sprite
 
     private function animate()
     {
+        if (inputs == null || behaviors == null || animation == null) return;
+
         if (isGoingLeft)
         {
             animation.x = Thief.WIDTH;
@@ -254,6 +282,8 @@ class Thief extends Sprite
         else if (isGoingRight)
             xAccel = 1;
 
+        if (collideGround != null || collideFloor != null) isAirborne = false;
+
         if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
         {
             xMaxSpeed = 3;
@@ -275,9 +305,13 @@ class Thief extends Sprite
                 _hasFoundLoot = true;
             }
 
-            if (lobby != null)
+            if (collideLobby != null)
             {
-                if (_hasFoundLoot) world.loadNextLevel();
+                if (_hasFoundLoot)
+                {
+                    world.loadNextLevel();
+                    return;
+                }
                 else score.points -= 100;
             }
         }
