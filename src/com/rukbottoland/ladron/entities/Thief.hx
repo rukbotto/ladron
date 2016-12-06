@@ -263,9 +263,7 @@ class Thief extends Sprite
         {
             xMaxSpeed = 3;
             isMakingNoise = false;
-
-            if (Math.random() * 100 >= 21 && Math.random() * 100 <= 22)
-                isMakingNoise = true;
+            if (Math.random() * 100 < 1) isMakingNoise = true;
         }
         else if (!isSneaking && isGoingLeft || !isSneaking && isGoingRight)
         {
@@ -292,36 +290,6 @@ class Thief extends Sprite
         }
         else
             isMakingNoise = false;
-
-        if (collideWall != null && !collideWall.passThrough)
-        {
-            if (isBlockedRight && isGoingLeft)
-            {
-                isBlockedRight = false;
-                x = collideWall.x - Thief.WIDTH - 1;
-            }
-            else if (isBlockedLeft && isGoingRight)
-            {
-                isBlockedLeft = false;
-                x = collideWall.x + Wall.WIDTH + 1;
-            }
-
-            if (xSpeed < 0)
-            {
-                isBlockedLeft = true;
-                isBlockedRight = false;
-                x = collideWall.x + Wall.WIDTH - 1;
-            }
-            else if (xSpeed > 0)
-            {
-                isBlockedLeft = false;
-                isBlockedRight = true;
-                x = collideWall.x - Thief.WIDTH + 1;
-            }
-
-            xAccel = 0;
-            world.x = -x + xInitial;
-        }
 
         if (!isAirborne)
         {
@@ -357,6 +325,48 @@ class Thief extends Sprite
             }
 
             isCrouching = false;
+        }
+
+        if (collideWall != null && !collideWall.passThrough)
+        {
+            if (isBlockedRight && isGoingLeft)
+            {
+                isBlockedRight = false;
+                x = collideWall.x - Thief.WIDTH - 1;
+            }
+            else if (isBlockedLeft && isGoingRight)
+            {
+                isBlockedLeft = false;
+                x = collideWall.x + Wall.WIDTH + 1;
+            }
+
+            if (xSpeed < 0)
+            {
+                isBlockedLeft = true;
+                isBlockedRight = false;
+                x = collideWall.x + Wall.WIDTH - 1;
+            }
+            else if (xSpeed > 0)
+            {
+                isBlockedLeft = false;
+                isBlockedRight = true;
+                x = collideWall.x - Thief.WIDTH + 1;
+            }
+
+            xAccel = 0;
+            world.x = -x + xInitial;
+        }
+
+        if (collideRoom != null)
+        {
+            for (object in collideRoom.childByType["bed"])
+            {
+                for (object2 in cast(object, Bed).childByType["occupant"])
+                {
+                    if (isMakingNoise)
+                        cast(object2, Occupant).isAwake = true;
+                }
+            }
         }
 
         xSpeed += xAccel * 3;
