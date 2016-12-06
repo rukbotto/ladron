@@ -30,6 +30,7 @@ class Room extends Sprite
         _childByType = [
             "closet" => [],
             "stair" => [],
+            "bed" => [],
         ];
         this.x = x;
         this.y = y;
@@ -52,6 +53,13 @@ class Room extends Sprite
         for (object in _childByType["stair"])
         {
             removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["bed"])
+        {
+            removeChild(object);
+            cast(object, Bed).destroy();
             object = null;
         }
 
@@ -108,7 +116,9 @@ class Room extends Sprite
 
         var bedX = Math.random() * (Room.WIDTH - Bed.WIDTH);
         var bedY = Room.HEIGHT - Bed.HEIGHT;
-        addChild(new Bed(bedX, bedY));
+        var bed = new Bed(bedX, bedY);
+        addChild(bed);
+        _childByType["bed"].push(bed);
     }
 
     public function setStairUpFront()
