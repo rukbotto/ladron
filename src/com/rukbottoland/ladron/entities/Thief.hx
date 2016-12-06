@@ -9,6 +9,7 @@ import com.rukbottoland.ladron.Main;
 import com.rukbottoland.ladron.entities.Closet;
 import com.rukbottoland.ladron.entities.Lobby;
 import com.rukbottoland.ladron.entities.Room;
+import com.rukbottoland.ladron.entities.Wall;
 import com.rukbottoland.ladron.utils.Score;
 import com.rukbottoland.ladron.utils.Tools;
 import com.rukbottoland.ladron.worlds.Play;
@@ -46,6 +47,7 @@ class Thief extends Sprite
     private var behaviors:Map<String,BehaviorData>;
     private var animation:AnimatedSprite;
 
+    private var xInitial:Float;
     private var yInitial:Float;
 
     private var xAccel:Float = 0;
@@ -55,6 +57,14 @@ class Thief extends Sprite
     private var yAccel:Float = 0;
     private var ySpeed:Float = 0;
 
+    private var collideGround:Ground = null;
+    private var collideFloor:Floor = null;
+    private var collideLobby:Lobby = null;
+    private var collideWall:Wall = null;
+    private var collideRoom:Room = null;
+    private var collideCloset:Closet = null;
+    private var collideStair:Stair = null;
+
     private var isGoingLeft:Bool = false;
     private var isGoingRight:Bool = false;
     private var isSneaking:Bool = false;
@@ -63,13 +73,8 @@ class Thief extends Sprite
     private var isCrouching:Bool = false;
     private var isAirborne:Bool = false;
     private var isMakingNoise:Bool = false;
-
-    private var collideGround:Ground = null;
-    private var collideFloor:Floor = null;
-    private var collideLobby:Lobby = null;
-    private var collideRoom:Room = null;
-    private var collideCloset:Closet = null;
-    private var collideStair:Stair = null;
+    private var isBlockedLeft:Bool = false;
+    private var isBlockedRight:Bool = false;
 
     public function new(x:Float, y:Float, world:Play)
     {
@@ -80,6 +85,7 @@ class Thief extends Sprite
         score = world.score;
         this.x = x;
         this.y = y;
+        xInitial = x;
         yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -100,6 +106,7 @@ class Thief extends Sprite
         collideGround = null;
         collideFloor = null;
         collideLobby = null;
+        collideWall = null;
         collideRoom = null;
         collideCloset = null;
         collideStair = null;
@@ -202,6 +209,13 @@ class Thief extends Sprite
             collideLobby = null;
         }
 
+        for (object in world.childByType["wall"])
+        {
+            collideWall = cast(object, Wall);
+            if (hitTestObject(collideWall) && !collideWall.passThrough) break;
+            collideWall = null;
+        }
+
         for (object in world.childByType["room"])
         {
             collideRoom = cast(object, Room);
@@ -227,45 +241,6 @@ class Thief extends Sprite
         }
     }
 
-    private function animate()
-    {
-        if (inputs == null || behaviors == null || animation == null) return;
-
-        if (isGoingLeft)
-        {
-            animation.x = Thief.WIDTH;
-            animation.scaleX = -1;
-        }
-        else if (isGoingRight)
-        {
-            animation.x = 0;
-            animation.scaleX = 1;
-        }
-
-        if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
-        {
-            if (animation.currentBehavior != behaviors["sneak"])
-                animation.showBehavior("sneak");
-        }
-        else if (!isSneaking && isGoingLeft || !isSneaking && isGoingRight)
-        {
-            if (animation.currentBehavior != behaviors["run"])
-                animation.showBehavior("run");
-        }
-        else if (inputs.search)
-            animation.showBehavior("search");
-        else
-            animation.showBehavior("stand");
-
-        if (isAirborne)
-        {
-            if (animation.currentBehavior != behaviors["jump"])
-                animation.showBehavior("jump");
-        }
-
-        animation.update(elapsed);
-    }
-
     private function update()
     {
         if (tickDown < 0)
@@ -274,6 +249,8 @@ class Thief extends Sprite
             if (score.points > 0) score.points -= 1;
         }
 
+        if (collideGround != null || collideFloor != null) isAirborne = false;
+
         xAccel = 0;
         yAccel = 15;
 
@@ -281,8 +258,6 @@ class Thief extends Sprite
             xAccel = -1;
         else if (isGoingRight)
             xAccel = 1;
-
-        if (collideGround != null || collideFloor != null) isAirborne = false;
 
         if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
         {
@@ -317,6 +292,36 @@ class Thief extends Sprite
         }
         else
             isMakingNoise = false;
+
+        if (collideWall != null && !collideWall.passThrough)
+        {
+            if (isBlockedRight && isGoingLeft)
+            {
+                isBlockedRight = false;
+                x = collideWall.x - Thief.WIDTH - 1;
+            }
+            else if (isBlockedLeft && isGoingRight)
+            {
+                isBlockedLeft = false;
+                x = collideWall.x + Wall.WIDTH + 1;
+            }
+
+            if (xSpeed < 0)
+            {
+                isBlockedLeft = true;
+                isBlockedRight = false;
+                x = collideWall.x + Wall.WIDTH - 1;
+            }
+            else if (xSpeed > 0)
+            {
+                isBlockedLeft = false;
+                isBlockedRight = true;
+                x = collideWall.x - Thief.WIDTH + 1;
+            }
+
+            xAccel = 0;
+            world.x = -x + xInitial;
+        }
 
         if (!isAirborne)
         {
@@ -366,5 +371,44 @@ class Thief extends Sprite
 
         ySpeed += yAccel * (elapsed / 1000);
         y += ySpeed;
+    }
+
+    private function animate()
+    {
+        if (inputs == null || behaviors == null || animation == null) return;
+
+        if (isGoingLeft)
+        {
+            animation.x = Thief.WIDTH;
+            animation.scaleX = -1;
+        }
+        else if (isGoingRight)
+        {
+            animation.x = 0;
+            animation.scaleX = 1;
+        }
+
+        if (isSneaking && isGoingLeft || isSneaking && isGoingRight)
+        {
+            if (animation.currentBehavior != behaviors["sneak"])
+                animation.showBehavior("sneak");
+        }
+        else if (!isSneaking && isGoingLeft || !isSneaking && isGoingRight)
+        {
+            if (animation.currentBehavior != behaviors["run"])
+                animation.showBehavior("run");
+        }
+        else if (inputs.search)
+            animation.showBehavior("search");
+        else
+            animation.showBehavior("stand");
+
+        if (isAirborne)
+        {
+            if (animation.currentBehavior != behaviors["jump"])
+                animation.showBehavior("jump");
+        }
+
+        animation.update(elapsed);
     }
 }

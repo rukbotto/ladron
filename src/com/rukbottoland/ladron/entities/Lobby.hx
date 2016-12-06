@@ -14,8 +14,8 @@ class Lobby extends Sprite
 
     public function onAddedToStage(event:Event)
     {
-        x = 120.0;
-        y = stage.stageHeight - 260.0;
+        x = 260;
+        y = stage.stageHeight - 260;
 
         var lobby = Assets.getBitmapData("graphics/lobby.png");
         graphics.beginBitmapFill(lobby, false);

@@ -139,7 +139,7 @@ class Play extends Sprite
         graphics.endFill();
 
         graphics.beginFill(0xffffff);
-        graphics.drawCircle(200, 200, 40);
+        graphics.drawCircle(340, 200, 40);
         graphics.endFill();
 
         var ground = new Ground();
@@ -153,7 +153,7 @@ class Play extends Sprite
         generateBuilding();
         placeLoot();
 
-        var thiefX = stage.stageWidth / 2 - 140;
+        var thiefX = stage.stageWidth / 2;
         var thiefY = ground.y - Thief.HEIGHT;
         thief = new Thief(thiefX, thiefY, this);
         addChild(thief);
@@ -195,7 +195,7 @@ class Play extends Sprite
 
     private function generateBuilding()
     {
-        var x = stage.stageWidth / 2;
+        var x = stage.stageWidth / 2 + 140;
         var y = stage.stageHeight - 200;
         var floors = difficulty;
         var rooms = difficulty + 1;
@@ -213,6 +213,7 @@ class Play extends Sprite
             wallX = x;
             wallY = y - (i + 1) * Wall.HEIGHT - i * Floor.HEIGHT;
             var wall = new Wall(wallX, wallY);
+            if (i == 0) wall.passThrough = true;
             addChild(wall);
             _childByType["wall"].push(wall);
 
@@ -235,6 +236,7 @@ class Play extends Sprite
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
                 wall = new Wall(wallX, wallY);
+                if (j < rooms - 1) wall.passThrough = true;
                 addChild(wall);
                 _childByType["wall"].push(wall);
             }

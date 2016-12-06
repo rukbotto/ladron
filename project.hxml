@@ -1,2 +1,3 @@
 -lib openfl:4.4.1
 -lib spritesheet:1.2.0
+-lib hxtelemetry:0.3.5
