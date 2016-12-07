@@ -6,10 +6,6 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 
 import com.rukbottoland.ladron.Main;
-import com.rukbottoland.ladron.entities.Closet;
-import com.rukbottoland.ladron.entities.Lobby;
-import com.rukbottoland.ladron.entities.Room;
-import com.rukbottoland.ladron.entities.Wall;
 import com.rukbottoland.ladron.utils.Score;
 import com.rukbottoland.ladron.utils.Tools;
 import com.rukbottoland.ladron.worlds.Play;
@@ -23,16 +19,16 @@ class Thief extends Sprite
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
 
-    public var health(get,never):Int;
     private var _health:Int = 8;
+    public var health(get,never):Int;
     private function get_health():Int { return _health; }
 
-    public var time(get,never):Int;
     private var _time:Int = 0;
+    public var time(get,never):Int;
     private function get_time():Int { return _time; }
 
-    public var hasFoundLoot(get,never):Bool;
     private var _hasFoundLoot:Bool = false;
+    public var hasFoundLoot(get,never):Bool;
     private function get_hasFoundLoot():Bool { return _hasFoundLoot; }
 
     private var world:Play;
@@ -359,14 +355,8 @@ class Thief extends Sprite
 
         if (collideRoom != null)
         {
-            for (object in collideRoom.childByType["bed"])
-            {
-                for (object2 in cast(object, Bed).childByType["occupant"])
-                {
-                    if (isMakingNoise)
-                        cast(object2, Occupant).isAwake = true;
-                }
-            }
+            for (object in collideRoom.childByType["occupant"])
+                if (isMakingNoise) cast(object, Occupant).isAwake = true;
         }
 
         xSpeed += xAccel * 3;

@@ -31,6 +31,7 @@ class Room extends Sprite
             "closet" => [],
             "stair" => [],
             "bed" => [],
+            "occupant" => [],
         ];
         this.x = x;
         this.y = y;
@@ -59,14 +60,52 @@ class Room extends Sprite
         for (object in _childByType["bed"])
         {
             removeChild(object);
-            cast(object, Bed).destroy();
+            object = null;
+        }
+
+        for (object in _childByType["occupant"])
+        {
+            removeChild(object);
+            cast(object, Occupant).destroy();
             object = null;
         }
 
         _childByType = null;
     }
 
-    public function onAddedToStage(event:Event)
+    public function setStairUpFront()
+    {
+        stairUp = true;
+        stairDown = false;
+        stairFront = true;
+        stairBack = false;
+    }
+
+    public function setStairDownFront()
+    {
+        stairUp = false;
+        stairDown = true;
+        stairFront = true;
+        stairBack = false;
+    }
+
+    public function setStairUpBack()
+    {
+        stairUp = true;
+        stairDown = false;
+        stairFront = false;
+        stairBack = true;
+    }
+
+    public function setStairDownBack()
+    {
+        stairUp = false;
+        stairDown = true;
+        stairFront = false;
+        stairBack = true;
+    }
+
+    private function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
@@ -74,11 +113,6 @@ class Room extends Sprite
         graphics.drawRect(0, 0, Room.WIDTH, Room.HEIGHT);
         graphics.endFill();
 
-        setup();
-    }
-
-    private function setup()
-    {
         var stair = null;
         if (stairUp && stairBack)
         {
@@ -119,37 +153,11 @@ class Room extends Sprite
         var bed = new Bed(bedX, bedY);
         addChild(bed);
         _childByType["bed"].push(bed);
-    }
 
-    public function setStairUpFront()
-    {
-        stairUp = true;
-        stairDown = false;
-        stairFront = true;
-        stairBack = false;
-    }
-
-    public function setStairDownFront()
-    {
-        stairUp = false;
-        stairDown = true;
-        stairFront = true;
-        stairBack = false;
-    }
-
-    public function setStairUpBack()
-    {
-        stairUp = true;
-        stairDown = false;
-        stairFront = false;
-        stairBack = true;
-    }
-
-    public function setStairDownBack()
-    {
-        stairUp = false;
-        stairDown = true;
-        stairFront = false;
-        stairBack = true;
+        var occupantX = bedX + 5;
+        var occupantY = bedY - Occupant.WIDTH;
+        var occupant = new Occupant(occupantX, occupantY);
+        addChild(occupant);
+        _childByType["occupant"].push(occupant);
     }
 }
