@@ -106,16 +106,27 @@ class Occupant extends Sprite
             _childByType["bullet"].push(currentBullet);
         }
 
+        for (object in _childByType["bullet"])
+        {
+            if (cast(object, Bullet).forDeletion)
+            {
+                _childByType["bullet"].remove(object);
+                removeChild(object);
+                cast(object, Bullet).destroy();
+                object = null;
+            }
+        }
+
         if (!_isAwake && _childByType["bullet"].length > 0)
         {
             for (object in _childByType["bullet"])
             {
+                _childByType["bullet"].remove(object);
                 removeChild(object);
                 cast(object, Bullet).destroy();
                 object = null;
             }
 
-            _childByType["bullet"] = [];
             currentBullet = null;
         }
     }
