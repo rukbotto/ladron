@@ -188,7 +188,7 @@ class Occupant extends Sprite
             x = xInitial + Occupant.WIDTH;
             scaleX = -1;
         }
-        else if (_isAwake && !isFacingLeft)
+        else
         {
             x = xInitial;
             scaleX = 1;
