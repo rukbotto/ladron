@@ -1,11 +1,14 @@
 package com.rukbottoland.ladron.entities;
 
+import com.rukbottoland.ladron.worlds.Play;
+
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 class Occupant extends Sprite
 {
@@ -38,9 +41,16 @@ class Occupant extends Sprite
 
     private var bitmapData:BitmapData = null;
 
+    private var localPos:Point;
+    private var globalPos:Point;
+
+    private var xInitial:Float;
     private var yInitial:Float;
 
+    private var world:Play;
     private var currentBullet:Bullet = null;
+
+    private var isFacingLeft:Bool = false;
 
     public function new(x:Float, y:Float)
     {
@@ -51,6 +61,7 @@ class Occupant extends Sprite
         ];
         this.x = x;
         this.y = y;
+        xInitial = x;
         yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -67,6 +78,7 @@ class Occupant extends Sprite
             object = null;
         }
 
+        world = null;
         _childByType = null;
         bitmapData = null;
         currentBullet = null;
@@ -76,6 +88,10 @@ class Occupant extends Sprite
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        world = cast(parent.parent, Play);
+        localPos = new Point(x, y);
+        globalPos = parent.localToGlobal(localPos);
     }
 
     private function onEnterFrame(event:Event)
@@ -84,6 +100,10 @@ class Occupant extends Sprite
         elapsed = timer - lastTimer;
         awakeCountDown -= elapsed;
         fireCountDown -= elapsed;
+
+        localPos.x = x;
+        localPos.y = y;
+        globalPos = parent.localToGlobal(localPos);
 
         update();
         animate();
@@ -95,6 +115,15 @@ class Occupant extends Sprite
 
     private function update()
     {
+        for (object in world.childByType["thief"])
+        {
+            if (cast(object, Thief).globalPos.x < globalPos.x)
+                isFacingLeft = true;
+            else
+                isFacingLeft = false;
+            break;
+        }
+
         if (awakeCountDown < 0) _isAwake = false;
 
         if (_isAwake && fireCountDown < 0)
@@ -152,6 +181,17 @@ class Occupant extends Sprite
             graphics.beginBitmapFill(bitmapData);
             graphics.drawRect(0, 0, Occupant.HEIGHT, Occupant.WIDTH);
             graphics.endFill();
+        }
+
+        if (_isAwake && isFacingLeft)
+        {
+            x = xInitial + Occupant.WIDTH;
+            scaleX = -1;
+        }
+        else if (_isAwake && !isFacingLeft)
+        {
+            x = xInitial;
+            scaleX = 1;
         }
     }
 }

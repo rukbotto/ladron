@@ -12,17 +12,6 @@ class Bullet extends Sprite
     public static inline var WIDTH:Float = 5;
     public static inline var HEIGHT:Float = 2;
 
-    private var _isGoingLeft:Bool = false;
-    public var isGoingLeft(get,set):Bool;
-    private function get_isGoingLeft():Bool
-    {
-        return _isGoingLeft;
-    }
-    private function set_isGoingLeft(value:Bool):Bool
-    {
-        return _isGoingLeft = value;
-    }
-
     private var _forDeletion:Bool = false;
     public var forDeletion(get,never):Bool;
     private function get_forDeletion():Bool
@@ -35,7 +24,6 @@ class Bullet extends Sprite
     private var collideWall:Wall = null;
     private var sortedWalls:Array<DisplayObject>;
 
-    private var xAccel:Float = 0;
     private var xMaxSpeed:Float = 3;
     private var distanceA:Float = 0;
     private var distanceB:Float = 0;
@@ -102,10 +90,6 @@ class Bullet extends Sprite
     private function update()
     {
         if (collideWall != null) _forDeletion = true;
-
-        if (_isGoingLeft) xAccel = -1;
-        else xAccel = 1;
-
-        x += xMaxSpeed * xAccel;
+        x += xMaxSpeed;
     }
 }

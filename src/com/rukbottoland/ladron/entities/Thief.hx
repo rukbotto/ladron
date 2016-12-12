@@ -4,6 +4,7 @@ import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.geom.Point;
 
 import com.rukbottoland.ladron.Main;
 import com.rukbottoland.ladron.utils.Score;
@@ -30,6 +31,20 @@ class Thief extends Sprite
     private var _hasFoundLoot:Bool = false;
     public var hasFoundLoot(get,never):Bool;
     private function get_hasFoundLoot():Bool { return _hasFoundLoot; }
+
+    private var _localPos:Point;
+    public var localPos(get,never):Point;
+    private function get_localPos():Point
+    {
+        return _localPos;
+    }
+
+    private var _globalPos:Point;
+    public var globalPos(get,never):Point;
+    private function get_globalPos():Point
+    {
+        return _globalPos;
+    }
 
     private var world:Play;
     private var inputs:Dynamic;
@@ -132,6 +147,9 @@ class Thief extends Sprite
         animation = new AnimatedSprite(spritesheet, true);
         animation.showBehavior("stand");
         addChild(animation);
+
+        _localPos = new Point(x, y);
+        _globalPos = parent.localToGlobal(_localPos);
     }
 
     private function onEnterFrame(event:Event)
@@ -139,6 +157,10 @@ class Thief extends Sprite
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
         tickDown -= elapsed;
+
+        _localPos.x = x;
+        _localPos.y = y;
+        _globalPos = parent.localToGlobal(_localPos);
 
         input();
         collide();

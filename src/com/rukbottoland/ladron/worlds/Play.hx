@@ -43,8 +43,6 @@ class Play extends Sprite
     private var difficulty:Int;
     private var isActive:Bool = false;
 
-    private var thief:Thief;
-
     public function new(difficulty:Int, points:Int, inputManager:InputManager)
     {
         super();
@@ -56,6 +54,7 @@ class Play extends Sprite
             "ground" => [],
             "lobby" => [],
             "wall" => [],
+            "thief" => [],
         ];
         _score = new Score(points);
         this.difficulty = difficulty;
@@ -78,8 +77,11 @@ class Play extends Sprite
         for (object in _childByType["lobby"]) removeChild(object);
         for (object in _childByType["wall"]) removeChild(object);
 
-        removeChild(thief);
-        thief.destroy();
+        for (object in _childByType["thief"])
+        {
+            removeChild(object);
+            cast(object, Thief).destroy();
+        }
 
         stage.removeChild(scoreLabel);
         stage.removeChild(healthLabel);
@@ -94,7 +96,6 @@ class Play extends Sprite
         healthLabel = null;
         timeLabel = null;
         lootLabel = null;
-        thief = null;
     }
 
     public function onAddedToStage(event:Event)
@@ -155,8 +156,9 @@ class Play extends Sprite
 
         var thiefX = stage.stageWidth / 2;
         var thiefY = ground.y - Thief.HEIGHT;
-        thief = new Thief(thiefX, thiefY, this);
+        var thief = new Thief(thiefX, thiefY, this);
         addChild(thief);
+        _childByType["thief"].push(thief);
 
         lootLabel.x = thiefX - lootLabel.width / 2;
 
@@ -180,17 +182,24 @@ class Play extends Sprite
         scoreLabel.x = stage.stageWidth / 10 * 8 - scoreLabel.width / 2;
         scoreLabel.y = stage.stageHeight / 20;
 
-        healthLabel.text = "Lifes: " + thief.health;
-        healthLabel.x = stage.stageWidth / 10 * 2 - healthLabel.width / 2;
-        healthLabel.y = stage.stageHeight / 20;
+        for (object in _childByType["thief"])
+        {
+            var thief = cast(object, Thief);
 
-        timeLabel.text = "Time: " + thief.time;
-        timeLabel.x = stage.stageWidth / 10 * 5 - timeLabel.width / 2;
-        timeLabel.y = stage.stageHeight / 20;
+            healthLabel.text = "Lifes: " + thief.health;
+            healthLabel.x = stage.stageWidth / 10 * 2 - healthLabel.width / 2;
+            healthLabel.y = stage.stageHeight / 20;
 
-        lootLabel.y = thief.y - 20;
+            timeLabel.text = "Time: " + thief.time;
+            timeLabel.x = stage.stageWidth / 10 * 5 - timeLabel.width / 2;
+            timeLabel.y = stage.stageHeight / 20;
 
-        if (thief.hasFoundLoot) lootLabel.visible = true;
+            lootLabel.y = thief.y - 20;
+
+            if (thief.hasFoundLoot) lootLabel.visible = true;
+
+            break;
+        }
     }
 
     private function generateBuilding()
