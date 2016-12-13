@@ -84,7 +84,7 @@ class Occupant extends Sprite
     {
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
-        awakeCountDown -= elapsed;
+        if (_isAwake) awakeCountDown -= elapsed;
 
         localPos.x = x;
         localPos.y = y;
