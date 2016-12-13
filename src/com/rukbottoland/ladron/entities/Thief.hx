@@ -2,6 +2,7 @@ package com.rukbottoland.ladron.entities;
 
 import openfl.Assets;
 import openfl.Lib;
+import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -80,6 +81,8 @@ class Thief extends Sprite
     private var xDrag:Float = 2;
     private var yAccel:Float = 0;
     private var ySpeed:Float = 0;
+    private var distanceA:Float = 0;
+    private var distanceB:Float = 0;
 
     private var collideGround:Ground = null;
     private var collideFloor:Floor = null;
@@ -88,6 +91,8 @@ class Thief extends Sprite
     private var collideRoom:Room = null;
     private var collideCloset:Closet = null;
     private var collideStair:Stair = null;
+
+    private var sortedRooms:Array<DisplayObject>;
 
     private var isGoingLeft:Bool = false;
     private var isGoingRight:Bool = false;
@@ -111,6 +116,7 @@ class Thief extends Sprite
         this.y = y;
         xInitial = x;
         yInitial = y;
+        sortedRooms = [];
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
@@ -168,6 +174,8 @@ class Thief extends Sprite
         collideRoom = null;
         collideCloset = null;
         collideStair = null;
+
+        sortedRooms = null;
     }
 
     private function onEnterFrame(event:Event)
@@ -252,7 +260,9 @@ class Thief extends Sprite
             collideWall = null;
         }
 
-        for (object in world.childByType["room"])
+        sortedRooms = world.childByType["room"].concat([]);
+        sortedRooms.sort(sortRooms);
+        for (object in sortedRooms)
         {
             collideRoom = cast(object, Room);
             if (hitTestObject(collideRoom)) break;
@@ -275,6 +285,15 @@ class Thief extends Sprite
                 collideStair = null;
             }
         }
+    }
+
+    private function sortRooms(a:DisplayObject, b:DisplayObject):Int
+    {
+        distanceA = Tools.distance(x, y, a.x, a.y);
+        distanceB = Tools.distance(x, y, b.x, b.y);
+        if (distanceA > distanceB) return 1;
+        else if (distanceA < distanceB) return -1;
+        else return 0;
     }
 
     private function update()
