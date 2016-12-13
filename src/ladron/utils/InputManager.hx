@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.utils;
+package ladron.utils;
 
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;

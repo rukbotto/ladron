@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="ladron" package="com.rukbottoland.ladron" version="0.0.1" company="" />
+	<meta title="ladron" package="ladron" version="0.0.1" company="" />
 
-	<app file="Main" main="com.rukbottoland.ladron.Main" path="bin" />
+	<app file="Main" main="ladron.Main" path="bin" />
 
 	<window fps="60" background="0x3a5c94" />
 	<window width="1024" height="768" resizable="true" unless="mobile" />

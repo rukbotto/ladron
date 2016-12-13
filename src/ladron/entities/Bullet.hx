@@ -1,7 +1,7 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
-import com.rukbottoland.ladron.worlds.Play;
-import com.rukbottoland.ladron.utils.Tools;
+import ladron.worlds.Play;
+import ladron.utils.Tools;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -35,7 +35,7 @@ class Bullet extends Sprite
     private var collideWall:Wall = null;
     private var collideThief:Thief = null;
 
-    private var sortedWalls:Array<DisplayObject>;
+    private var ladron:Array<DisplayObject>;
 
     private var xAccel:Float = 0;
     private var xMaxSpeed:Float = 3;
@@ -47,7 +47,7 @@ class Bullet extends Sprite
         super();
         this.x = x;
         this.y = y;
-        sortedWalls = [];
+        ladron = [];
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
@@ -72,7 +72,7 @@ class Bullet extends Sprite
         world = null;
         collideWall = null;
         collideThief = null;
-        sortedWalls = null;
+        ladron = null;
     }
 
     private function onEnterFrame(event:Event)
@@ -83,9 +83,9 @@ class Bullet extends Sprite
 
     private function collide()
     {
-        sortedWalls = world.childByType["wall"].concat([]);
-        sortedWalls.sort(sortWalls);
-        for (object in sortedWalls)
+        ladron = world.childByType["wall"].concat([]);
+        ladron.sort(sortWalls);
+        for (object in ladron)
         {
             collideWall = null;
             if (hitTestObject(object))

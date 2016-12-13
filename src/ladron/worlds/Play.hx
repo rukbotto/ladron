@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.worlds;
+package ladron.worlds;
 
 import openfl.Assets;
 import openfl.display.DisplayObject;
@@ -8,15 +8,15 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
-import com.rukbottoland.ladron.entities.Closet;
-import com.rukbottoland.ladron.entities.Floor;
-import com.rukbottoland.ladron.entities.Ground;
-import com.rukbottoland.ladron.entities.Lobby;
-import com.rukbottoland.ladron.entities.Room;
-import com.rukbottoland.ladron.entities.Thief;
-import com.rukbottoland.ladron.entities.Wall;
-import com.rukbottoland.ladron.utils.InputManager;
-import com.rukbottoland.ladron.utils.Score;
+import ladron.entities.Closet;
+import ladron.entities.Floor;
+import ladron.entities.Ground;
+import ladron.entities.Lobby;
+import ladron.entities.Room;
+import ladron.entities.Thief;
+import ladron.entities.Wall;
+import ladron.utils.InputManager;
+import ladron.utils.Score;
 
 class Play extends Sprite
 {

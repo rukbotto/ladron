@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.worlds;
+package ladron.worlds;
 
 import openfl.Assets;
 import openfl.display.Sprite;
@@ -7,7 +7,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
-import com.rukbottoland.ladron.utils.InputManager;
+import ladron.utils.InputManager;
 
 class GameOver extends Sprite
 {

@@ -1,6 +1,6 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
-import com.rukbottoland.ladron.worlds.Play;
+import ladron.worlds.Play;
 
 import openfl.Assets;
 import openfl.Lib;

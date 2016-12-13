@@ -1,11 +1,11 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
 import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 
-import com.rukbottoland.ladron.worlds.Play;
+import ladron.worlds.Play;
 
 class Room extends Sprite
 {

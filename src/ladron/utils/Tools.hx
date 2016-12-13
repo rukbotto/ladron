@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.utils;
+package ladron.utils;
 
 class Tools
 {

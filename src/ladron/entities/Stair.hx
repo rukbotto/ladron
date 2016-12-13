@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
 import openfl.Assets;
 import openfl.display.Sprite;

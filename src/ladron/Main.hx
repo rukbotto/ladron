@@ -1,13 +1,13 @@
-package com.rukbottoland.ladron;
+package ladron;
 
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.Lib;
 
-import com.rukbottoland.ladron.utils.InputManager;
-import com.rukbottoland.ladron.worlds.Intro;
-import com.rukbottoland.ladron.utils.DebugInfo;
+import ladron.utils.InputManager;
+import ladron.worlds.Intro;
+import ladron.utils.DebugInfo;
 
 class Main extends Sprite
 {

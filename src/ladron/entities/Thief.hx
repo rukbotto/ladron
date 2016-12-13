@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
 import openfl.Assets;
 import openfl.Lib;
@@ -7,10 +7,10 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Point;
 
-import com.rukbottoland.ladron.Main;
-import com.rukbottoland.ladron.utils.Score;
-import com.rukbottoland.ladron.utils.Tools;
-import com.rukbottoland.ladron.worlds.Play;
+import ladron.Main;
+import ladron.utils.Score;
+import ladron.utils.Tools;
+import ladron.worlds.Play;
 
 import spritesheet.AnimatedSprite;
 import spritesheet.data.BehaviorData;

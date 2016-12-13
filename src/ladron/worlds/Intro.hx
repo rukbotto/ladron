@@ -1,4 +1,4 @@
-package com.rukbottoland.ladron.worlds;
+package ladron.worlds;
 
 import openfl.Assets;
 import openfl.display.Sprite;
@@ -6,8 +6,8 @@ import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
-import com.rukbottoland.ladron.utils.InputManager;
-import com.rukbottoland.ladron.worlds.Play;
+import ladron.utils.InputManager;
+import ladron.worlds.Play;
 
 class Intro extends Sprite
 {

@@ -1,22 +1,19 @@
-package com.rukbottoland.ladron.entities;
+package ladron.entities;
 
+import openfl.Assets;
 import openfl.display.Sprite;
 import openfl.events.Event;
 
-class Floor extends Sprite
+class Bed extends Sprite
 {
-    public static inline var HEIGHT:Float = 5;
+    public static inline var WIDTH:Float = 40;
+    public static inline var HEIGHT:Float = 7;
 
-    private var _width:Float;
-
-    public function new(x:Float, y:Float, width:Float)
+    public function new(x:Float, y:Float)
     {
         super();
-
         this.x = x;
         this.y = y;
-        _width = width;
-
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
     }
 
@@ -24,8 +21,8 @@ class Floor extends Sprite
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
-        graphics.beginFill(0x000000);
-        graphics.drawRect(0, 0, _width, Floor.HEIGHT);
+        graphics.beginBitmapFill(Assets.getBitmapData("graphics/bed.png"));
+        graphics.drawRect(0, 0, Bed.WIDTH, Bed.HEIGHT);
         graphics.endFill();
     }
 }
