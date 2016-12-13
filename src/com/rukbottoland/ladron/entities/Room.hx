@@ -1,5 +1,6 @@
 package com.rukbottoland.ladron.entities;
 
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -18,6 +19,14 @@ class Room extends Sprite
         return _childByType;
     }
 
+    private var timer:Float = 0;
+    private var lastTimer:Float = 0;
+    private var elapsed:Float = 0;
+    private var fireCountDown:Float = 1000;
+
+    private var currentOccupant:Occupant = null;
+    private var currentBullet:Bullet = null;
+
     private var stairUp:Bool;
     private var stairDown:Bool;
     private var stairFront:Bool;
@@ -32,6 +41,7 @@ class Room extends Sprite
             "stair" => [],
             "bed" => [],
             "occupant" => [],
+            "bullet" => [],
         ];
         this.x = x;
         this.y = y;
@@ -45,6 +55,8 @@ class Room extends Sprite
 
     public function destroy()
     {
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
         for (object in _childByType["closet"])
         {
             removeChild(object);
@@ -70,7 +82,16 @@ class Room extends Sprite
             object = null;
         }
 
+        for (object in _childByType["bullet"])
+        {
+            removeChild(object);
+            cast(object, Bullet).destroy();
+            object = null;
+        }
+
         _childByType = null;
+        currentOccupant = null;
+        currentBullet = null;
     }
 
     public function setStairUpFront()
@@ -108,6 +129,7 @@ class Room extends Sprite
     private function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+        addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
         graphics.beginFill(0x3d3d3d);
         graphics.drawRect(0, 0, Room.WIDTH, Room.HEIGHT);
@@ -159,5 +181,54 @@ class Room extends Sprite
         var occupant = new Occupant(occupantX, occupantY);
         addChild(occupant);
         _childByType["occupant"].push(occupant);
+    }
+
+    private function onEnterFrame(event:Event)
+    {
+        timer = Lib.getTimer();
+        elapsed = timer - lastTimer;
+        fireCountDown -= elapsed;
+
+        for (object in _childByType["occupant"])
+        {
+            if (cast(object, Occupant).isAwake && fireCountDown < 0)
+            {
+                var bulletX = object.x;
+                var bulletY = object.y + Occupant.HEIGHT / 2;
+                currentBullet = new Bullet(bulletX, bulletY);
+                if (cast(object, Occupant).isFacingLeft)
+                    currentBullet.isGoingLeft = true;
+                addChild(currentBullet);
+                _childByType["bullet"].push(currentBullet);
+            }
+
+            if (!cast(object, Occupant).isAwake &&
+                    _childByType["bullet"].length > 0)
+            {
+                for (object in _childByType["bullet"])
+                {
+                    _childByType["bullet"].remove(object);
+                    removeChild(object);
+                    cast(object, Bullet).destroy();
+                    object = null;
+                }
+
+                currentBullet = null;
+            }
+        }
+
+        for (object in _childByType["bullet"])
+        {
+            if (cast(object, Bullet).forDeletion)
+            {
+                _childByType["bullet"].remove(object);
+                removeChild(object);
+                cast(object, Bullet).destroy();
+                object = null;
+            }
+        }
+
+        if (fireCountDown < 0) fireCountDown = 1000;
+        lastTimer = timer;
     }
 }

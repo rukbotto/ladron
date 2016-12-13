@@ -15,13 +15,6 @@ class Occupant extends Sprite
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
 
-    public var childByType(get,never):Map<String,Array<DisplayObject>>;
-    private var _childByType:Map<String,Array<DisplayObject>>;
-    private function get_childByType():Map<String,Array<DisplayObject>>
-    {
-        return _childByType;
-    }
-
     private var _isAwake:Bool = false;
     public var isAwake(get,set):Bool;
     private function get_isAwake():Bool
@@ -33,11 +26,17 @@ class Occupant extends Sprite
         return _isAwake = value;
     }
 
+    private var _isFacingLeft:Bool = false;
+    public var isFacingLeft(get,never):Bool;
+    private function get_isFacingLeft():Bool
+    {
+        return _isFacingLeft;
+    }
+
     private var timer:Float = 0;
     private var lastTimer:Float = 0;
     private var elapsed:Float = 0;
     private var awakeCountDown:Float = 30000;
-    private var fireCountDown:Float = 1000;
 
     private var bitmapData:BitmapData = null;
 
@@ -50,15 +49,10 @@ class Occupant extends Sprite
     private var world:Play;
     private var currentBullet:Bullet = null;
 
-    private var isFacingLeft:Bool = false;
-
     public function new(x:Float, y:Float)
     {
         super();
 
-        _childByType = [
-            "bullet" => [],
-        ];
         this.x = x;
         this.y = y;
         xInitial = x;
@@ -71,15 +65,7 @@ class Occupant extends Sprite
     {
         removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-        for (object in _childByType["bullet"])
-        {
-            removeChild(object);
-            cast(object, Bullet).destroy();
-            object = null;
-        }
-
         world = null;
-        _childByType = null;
         bitmapData = null;
         currentBullet = null;
     }
@@ -99,7 +85,6 @@ class Occupant extends Sprite
         timer = Lib.getTimer();
         elapsed = timer - lastTimer;
         awakeCountDown -= elapsed;
-        fireCountDown -= elapsed;
 
         localPos.x = x;
         localPos.y = y;
@@ -109,7 +94,6 @@ class Occupant extends Sprite
         animate();
 
         if (awakeCountDown < 0) awakeCountDown = 30000;
-        if (fireCountDown < 0) fireCountDown = 1000;
         lastTimer = timer;
     }
 
@@ -118,46 +102,13 @@ class Occupant extends Sprite
         for (object in world.childByType["thief"])
         {
             if (cast(object, Thief).globalPos.x < globalPos.x)
-                isFacingLeft = true;
+                _isFacingLeft = true;
             else
-                isFacingLeft = false;
+                _isFacingLeft = false;
             break;
         }
 
         if (awakeCountDown < 0) _isAwake = false;
-
-        if (_isAwake && fireCountDown < 0)
-        {
-            var bulletX = Occupant.WIDTH / 2;
-            var bulletY = Occupant.HEIGHT / 2;
-            currentBullet = new Bullet(bulletX, bulletY);
-            addChild(currentBullet);
-            _childByType["bullet"].push(currentBullet);
-        }
-
-        for (object in _childByType["bullet"])
-        {
-            if (cast(object, Bullet).forDeletion)
-            {
-                _childByType["bullet"].remove(object);
-                removeChild(object);
-                cast(object, Bullet).destroy();
-                object = null;
-            }
-        }
-
-        if (!_isAwake && _childByType["bullet"].length > 0)
-        {
-            for (object in _childByType["bullet"])
-            {
-                _childByType["bullet"].remove(object);
-                removeChild(object);
-                cast(object, Bullet).destroy();
-                object = null;
-            }
-
-            currentBullet = null;
-        }
     }
 
     private function animate()
@@ -183,7 +134,7 @@ class Occupant extends Sprite
             graphics.endFill();
         }
 
-        if (_isAwake && isFacingLeft)
+        if (_isAwake && _isFacingLeft)
         {
             x = xInitial + Occupant.WIDTH;
             scaleX = -1;
