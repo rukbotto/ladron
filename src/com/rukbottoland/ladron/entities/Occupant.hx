@@ -59,15 +59,7 @@ class Occupant extends Sprite
         yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-    }
-
-    public function destroy()
-    {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-        world = null;
-        bitmapData = null;
-        currentBullet = null;
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
     private function onAddedToStage(event:Event)
@@ -78,6 +70,18 @@ class Occupant extends Sprite
         world = cast(parent.parent, Play);
         localPos = new Point(x, y);
         globalPos = parent.localToGlobal(localPos);
+    }
+
+    private function onRemovedFromStage(event:Event)
+    {
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        world = null;
+        localPos = null;
+        globalPos = null;
+        bitmapData = null;
+        currentBullet = null;
     }
 
     private function onEnterFrame(event:Event)

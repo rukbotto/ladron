@@ -11,7 +11,10 @@ class Stair extends Sprite
 
     public var up(get,never):Bool;
     private var _up:Bool;
-    private function get_up():Bool { return _up; }
+    private function get_up():Bool
+    {
+        return _up;
+    }
 
     public function new(x:Float, y:Float, up:Bool = true)
     {

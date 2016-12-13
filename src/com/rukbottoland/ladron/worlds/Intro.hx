@@ -20,15 +20,7 @@ class Intro extends Sprite
         super();
         this.inputManager = inputManager;
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-    }
-
-    public function destroy()
-    {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-        removeChild(messageField);
-        stage.removeChild(this);
-        inputManager = null;
-        messageField = null;
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
     private function onAddedToStage(event:Event)
@@ -60,6 +52,17 @@ class Intro extends Sprite
         isActive = true;
     }
 
+    private function onRemovedFromStage(event:Event)
+    {
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        removeChild(messageField);
+
+        inputManager = null;
+        messageField = null;
+    }
+
     private function onEnterFrame(event:Event)
     {
         if (inputManager.inputs.space)
@@ -67,7 +70,7 @@ class Intro extends Sprite
             if (isActive)
             {
                 stage.addChildAt(new Play(1, 0, inputManager), 1);
-                destroy();
+                stage.removeChild(this);
                 isActive = false;
             }
         }

@@ -14,6 +14,8 @@ class Lobby extends Sprite
 
     public function onAddedToStage(event:Event)
     {
+        removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+
         x = 260;
         y = stage.stageHeight - 260;
 

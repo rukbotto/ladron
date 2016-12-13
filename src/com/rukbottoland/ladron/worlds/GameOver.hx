@@ -71,6 +71,10 @@ class GameOver extends Sprite
         removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
         removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 
+        removeChild(messageField1);
+        removeChild(messageField2);
+        removeChild(messageField3);
+
         inputManager = null;
         messageField1 = null;
         messageField2 = null;
@@ -81,14 +85,9 @@ class GameOver extends Sprite
     {
         if (inputManager.inputs.space && isActive)
         {
-            removeChild(messageField1);
-            removeChild(messageField2);
-            removeChild(messageField3);
-
             Main.resetLevel();
             stage.addChildAt(new Play(Main.level, 0, inputManager), 1);
             stage.removeChild(this);
-
             isActive = false;
         }
     }

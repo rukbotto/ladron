@@ -22,7 +22,10 @@ class Play extends Sprite
 {
     public var inputManager(get,never):InputManager;
     private var _inputManager:InputManager;
-    private function get_inputManager():InputManager { return _inputManager; }
+    private function get_inputManager():InputManager
+    {
+        return _inputManager;
+    }
 
     public var childByType(get,never):Map<String,Array<DisplayObject>>;
     private var _childByType:Map<String,Array<DisplayObject>>;
@@ -33,7 +36,10 @@ class Play extends Sprite
 
     public var score(get,never):Score;
     private var _score:Score;
-    private function get_score():Score { return _score; }
+    private function get_score():Score
+    {
+        return _score;
+    }
 
     private var scoreLabel:TextField;
     private var healthLabel:TextField;
@@ -60,45 +66,31 @@ class Play extends Sprite
         this.difficulty = difficulty;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
-    public function destroy()
+    public function loadNextLevel()
     {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-        for (object in _childByType["room"])
+        if (isActive)
         {
-            removeChild(object);
-            cast(object, Room).destroy();
+            Main.increaseLevel();
+            stage.addChildAt(new Play(Main.level, score.points, _inputManager), 1);
+            stage.removeChild(this);
+            isActive = false;
         }
-
-        for (object in _childByType["floor"]) removeChild(object);
-        for (object in _childByType["ground"]) removeChild(object);
-        for (object in _childByType["lobby"]) removeChild(object);
-        for (object in _childByType["wall"]) removeChild(object);
-
-        for (object in _childByType["thief"])
-        {
-            removeChild(object);
-            cast(object, Thief).destroy();
-        }
-
-        stage.removeChild(scoreLabel);
-        stage.removeChild(healthLabel);
-        stage.removeChild(timeLabel);
-        stage.removeChild(lootLabel);
-        stage.removeChild(this);
-
-        _childByType = null;
-        _inputManager = null;
-        _score = null;
-        scoreLabel = null;
-        healthLabel = null;
-        timeLabel = null;
-        lootLabel = null;
     }
 
-    public function onAddedToStage(event:Event)
+    public function loadGameOver()
+    {
+        if (isActive)
+        {
+            stage.addChildAt(new GameOver(_inputManager, score.points), 1);
+            stage.removeChild(this);
+            isActive = false;
+        }
+    }
+
+    private function onAddedToStage(event:Event)
     {
         removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
         addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -165,25 +157,60 @@ class Play extends Sprite
         isActive = true;
     }
 
-    public function loadNextLevel()
+    private function onRemovedFromStage(event:Event)
     {
-        if (isActive)
-        {
-            Main.increaseLevel();
-            stage.addChildAt(new Play(Main.level, score.points, _inputManager), 1);
-            destroy();
-            isActive = false;
-        }
-    }
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-    public function loadGameOver()
-    {
-        if (isActive)
+        stage.removeChild(scoreLabel);
+        stage.removeChild(healthLabel);
+        stage.removeChild(timeLabel);
+        stage.removeChild(lootLabel);
+
+        for (object in _childByType["room"])
         {
-            stage.addChildAt(new GameOver(_inputManager, score.points), 1);
-            destroy();
-            isActive = false;
+            removeChild(object);
+            object = null;
         }
+
+        for (object in _childByType["floor"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["ground"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["lobby"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["wall"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["thief"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        _childByType = null;
+        _inputManager = null;
+        _score = null;
+
+        scoreLabel = null;
+        healthLabel = null;
+        timeLabel = null;
+        lootLabel = null;
     }
 
     private function onEnterFrame(event:Event)

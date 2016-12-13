@@ -11,8 +11,14 @@ class Closet extends Sprite
 
     public var hasLoot(get,set):Bool;
     private var _hasLoot:Bool;
-    private function get_hasLoot():Bool { return _hasLoot; }
-    private function set_hasLoot(value:Bool):Bool { return _hasLoot = value; }
+    private function get_hasLoot():Bool
+    {
+        return _hasLoot;
+    }
+    private function set_hasLoot(value:Bool):Bool
+    {
+        return _hasLoot = value;
+    }
 
     public function new(x:Float, y:Float)
     {

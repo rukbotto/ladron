@@ -51,47 +51,7 @@ class Room extends Sprite
         stairBack = false;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-    }
-
-    public function destroy()
-    {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-        for (object in _childByType["closet"])
-        {
-            removeChild(object);
-            object = null;
-        }
-
-        for (object in _childByType["stair"])
-        {
-            removeChild(object);
-            object = null;
-        }
-
-        for (object in _childByType["bed"])
-        {
-            removeChild(object);
-            object = null;
-        }
-
-        for (object in _childByType["occupant"])
-        {
-            removeChild(object);
-            cast(object, Occupant).destroy();
-            object = null;
-        }
-
-        for (object in _childByType["bullet"])
-        {
-            removeChild(object);
-            cast(object, Bullet).destroy();
-            object = null;
-        }
-
-        _childByType = null;
-        currentOccupant = null;
-        currentBullet = null;
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
     public function setStairUpFront()
@@ -183,6 +143,46 @@ class Room extends Sprite
         _childByType["occupant"].push(occupant);
     }
 
+    private function onRemovedFromStage(event:Event)
+    {
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        for (object in _childByType["closet"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["stair"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["bed"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["occupant"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        for (object in _childByType["bullet"])
+        {
+            removeChild(object);
+            object = null;
+        }
+
+        _childByType = null;
+        currentOccupant = null;
+        currentBullet = null;
+    }
+
     private function onEnterFrame(event:Event)
     {
         timer = Lib.getTimer();
@@ -209,7 +209,6 @@ class Room extends Sprite
                 {
                     _childByType["bullet"].remove(object);
                     removeChild(object);
-                    cast(object, Bullet).destroy();
                     object = null;
                 }
 
@@ -223,7 +222,6 @@ class Room extends Sprite
             {
                 _childByType["bullet"].remove(object);
                 removeChild(object);
-                cast(object, Bullet).destroy();
                 object = null;
             }
         }

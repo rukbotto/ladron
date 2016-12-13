@@ -49,16 +49,7 @@ class Bullet extends Sprite
         this.y = y;
         sortedWalls = [];
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-    }
-
-    public function destroy()
-    {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-        world = null;
-        collideWall = null;
-        collideThief = null;
-        sortedWalls = null;
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
     private function onAddedToStage(event:Event)
@@ -71,6 +62,17 @@ class Bullet extends Sprite
         graphics.endFill();
 
         world = cast(parent.parent, Play);
+    }
+
+    private function onRemovedFromStage(event:Event)
+    {
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        world = null;
+        collideWall = null;
+        collideThief = null;
+        sortedWalls = null;
     }
 
     private function onEnterFrame(event:Event)

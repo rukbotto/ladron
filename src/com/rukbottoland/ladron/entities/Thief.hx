@@ -20,31 +20,40 @@ class Thief extends Sprite
     public static inline var WIDTH:Float = 10;
     public static inline var HEIGHT:Float = 30;
 
-    private var _health:Int = 8;
     public var health(get,set):Int;
-    private function get_health():Int { return _health; }
+    private var _health:Int = 8;
+    private function get_health():Int
+    {
+        return _health;
+    }
     private function set_health(value:Int):Int
     {
         return _health = value;
     }
 
-    private var _time:Int = 0;
     public var time(get,never):Int;
-    private function get_time():Int { return _time; }
+    private var _time:Int = 0;
+    private function get_time():Int
+    {
+        return _time;
+    }
 
-    private var _hasFoundLoot:Bool = false;
     public var hasFoundLoot(get,never):Bool;
-    private function get_hasFoundLoot():Bool { return _hasFoundLoot; }
+    private var _hasFoundLoot:Bool = false;
+    private function get_hasFoundLoot():Bool
+    {
+        return _hasFoundLoot;
+    }
 
-    private var _localPos:Point;
     public var localPos(get,never):Point;
+    private var _localPos:Point;
     private function get_localPos():Point
     {
         return _localPos;
     }
 
-    private var _globalPos:Point;
     public var globalPos(get,never):Point;
+    private var _globalPos:Point;
     private function get_globalPos():Point
     {
         return _globalPos;
@@ -104,27 +113,7 @@ class Thief extends Sprite
         yInitial = y;
 
         addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-    }
-
-    public function destroy()
-    {
-        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-        removeChild(animation);
-
-        world = null;
-        inputs = null;
-        score = null;
-        behaviors = null;
-        animation = null;
-
-        collideGround = null;
-        collideFloor = null;
-        collideLobby = null;
-        collideWall = null;
-        collideRoom = null;
-        collideCloset = null;
-        collideStair = null;
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
     }
 
     private function onAddedToStage(event:Event)
@@ -154,6 +143,31 @@ class Thief extends Sprite
 
         _localPos = new Point(x, y);
         _globalPos = parent.localToGlobal(_localPos);
+    }
+
+    private function onRemovedFromStage(event:Event)
+    {
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+        removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+        removeChild(animation);
+
+        _localPos = null;
+        _globalPos = null;
+
+        world = null;
+        inputs = null;
+        score = null;
+        behaviors = null;
+        animation = null;
+
+        collideGround = null;
+        collideFloor = null;
+        collideLobby = null;
+        collideWall = null;
+        collideRoom = null;
+        collideCloset = null;
+        collideStair = null;
     }
 
     private function onEnterFrame(event:Event)
