@@ -33,6 +33,8 @@ class Bullet extends Sprite
     private var world:Play;
 
     private var collideWall:Wall = null;
+    private var collideThief:Thief = null;
+
     private var sortedWalls:Array<DisplayObject>;
 
     private var xAccel:Float = 0;
@@ -55,6 +57,7 @@ class Bullet extends Sprite
 
         world = null;
         collideWall = null;
+        collideThief = null;
         sortedWalls = null;
     }
 
@@ -89,6 +92,16 @@ class Bullet extends Sprite
                 break;
             }
         }
+
+        for (object in world.childByType["thief"])
+        {
+            collideThief = null;
+            if (hitTestObject(object))
+            {
+                collideThief = cast(object, Thief);
+                break;
+            }
+        }
     }
 
     private function sortWalls(a:DisplayObject, b:DisplayObject):Int
@@ -103,6 +116,12 @@ class Bullet extends Sprite
     private function update()
     {
         if (collideWall != null) _forDeletion = true;
+
+        if (collideThief != null)
+        {
+            collideThief.health -= 1;
+            _forDeletion = true;
+        }
 
         if (_isGoingLeft) xAccel = -1;
         else xAccel = 1;

@@ -176,6 +176,16 @@ class Play extends Sprite
         }
     }
 
+    public function loadGameOver()
+    {
+        if (isActive)
+        {
+            stage.addChildAt(new GameOver(_inputManager, score.points), 1);
+            destroy();
+            isActive = false;
+        }
+    }
+
     private function onEnterFrame(event:Event)
     {
         scoreLabel.text = "Score: " + _score.points;

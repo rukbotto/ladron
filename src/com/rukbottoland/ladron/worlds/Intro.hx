@@ -55,8 +55,6 @@ class Intro extends Sprite
         messageField.height = stage.stageHeight;
         messageField.wordWrap = true;
         messageField.defaultTextFormat = textFormat;
-        messageField.background = true;
-        messageField.backgroundColor = 0x3a5c94;
         addChild(messageField);
 
         isActive = true;

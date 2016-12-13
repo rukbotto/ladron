@@ -21,8 +21,12 @@ class Thief extends Sprite
     public static inline var HEIGHT:Float = 30;
 
     private var _health:Int = 8;
-    public var health(get,never):Int;
+    public var health(get,set):Int;
     private function get_health():Int { return _health; }
+    private function set_health(value:Int):Int
+    {
+        return _health = value;
+    }
 
     private var _time:Int = 0;
     public var time(get,never):Int;
@@ -343,6 +347,12 @@ class Thief extends Sprite
             }
 
             isCrouching = false;
+        }
+
+        if (_health < 1)
+        {
+            world.loadGameOver();
+            return;
         }
 
         if (collideWall != null && !collideWall.passThrough)
