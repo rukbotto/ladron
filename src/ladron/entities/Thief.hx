@@ -130,9 +130,9 @@ class Thief extends Sprite
         behaviors = [
             "run" => new BehaviorData("run", [0, 1, 0], true, 15),
             "sneak" => new BehaviorData("sneak", [0, 2, 0], true, 15),
-            "stand" => new BehaviorData("stand", [0], false, 0),
+            "stand" => new BehaviorData("stand", [0], false, 15),
             "jump" => new BehaviorData("jump", [3, 0], true, 15),
-            "search" => new BehaviorData("search", [4], false, 0),
+            "search" => new BehaviorData("search", [4], false, 15),
         ];
 
         var bitmapData = Assets.getBitmapData("graphics/thief.png");
