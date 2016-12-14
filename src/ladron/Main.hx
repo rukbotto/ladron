@@ -1,13 +1,13 @@
 package ladron;
 
+import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.KeyboardEvent;
-import openfl.Lib;
 
+import ladron.utils.DebugInfo;
 import ladron.utils.InputManager;
 import ladron.worlds.Intro;
-import ladron.utils.DebugInfo;
 
 class Main extends Sprite
 {
@@ -31,6 +31,7 @@ class Main extends Sprite
 
         stage.addChild(new Intro(inputManager));
 #if debug
+        trace("Renderer: " + stage.window.renderer.type);
         stage.addChild(new DebugInfo());
 #end
     }
