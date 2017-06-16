@@ -26,7 +26,5 @@ SOFTWARE.
 
 Copyright (c) 2012, Jose Miguel Venegas Mendoza & David Ricardo Venegas Mendoza
 
-All rights reserved.
-
-
-All the artwork in this package is licensed under a [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/).
+Artwork in this package is licensed under a [Creative Commons Attribution 3.0
+Unported License](http://creativecommons.org/licenses/by/3.0/).
