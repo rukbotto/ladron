@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="ladron" package="com.mechanikbot.ladron" version="0.0.1" company="" />
+	<meta title="ladron" package="ladron" version="0.0.1" company="" />
 
- 	<app file="Main" main="Main" path="bin" />
+	<app file="Main" main="ladron.Main" path="bin" />
 
-	<window fps="60" background="0x333333" />
-	<window width="640" height="480" resizable="true" unless="mobile" />
+	<window fps="60" background="0x3a5c94" />
+	<window width="1024" height="768" resizable="true" unless="mobile" />
 	<window fullscreen="true" if="mobile" />
 	<window orientation="landscape" vsync="true" antialiasing="0" if="cpp" />
 
 	<source path="src" />
 
-	<haxelib name="HaxePunk" />
+	<haxelib name="openfl" />
+	<haxelib name="spritesheet" />
+	<haxelib name="hxtelemetry" if="telemetry" />
+	<haxedef name="HXCPP_STACK_TRACE" if="telemetry" />
+	<haxedef name="HXCPP_TELEMETRY" if="telemetry" />
 
 	<assets path="assets/graphics" rename="graphics" include="*.png|*.jpg" />
 	<assets path="assets/audio" rename="audio" include="*.mp3" if="flash" />
 	<assets path="assets/audio" rename="audio" include="*.wav|*.ogg" unless="flash" />
 	<assets path="assets/font" rename="font" include="*.ttf" />
-
-	<icon path="assets/HaxePunk.svg" />
 </project>

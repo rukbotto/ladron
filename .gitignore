@@ -1,4 +1,7 @@
 .DS_Store
+project.xml.hxml
+.hxml
+
 *.idea
 *.iml
 *.pyc
@@ -6,3 +9,4 @@
 *.swo
 
 bin
+project.xml.hxml
