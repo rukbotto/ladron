@@ -83,7 +83,7 @@ class Bullet extends Sprite
 
     private function collide()
     {
-        ladron = world.childByType["wall"].concat([]);
+        ladron = world.spriteTagMap["wall"].concat([]);
         ladron.sort(sortWalls);
         for (object in ladron)
         {
@@ -95,7 +95,7 @@ class Bullet extends Sprite
             }
         }
 
-        for (object in world.childByType["thief"])
+        for (object in world.spriteTagMap["thief"])
         {
             collideThief = null;
             if (hitTestObject(object))

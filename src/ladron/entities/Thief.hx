@@ -232,35 +232,35 @@ class Thief extends Sprite
 
     private function collide()
     {
-        for (object in world.childByType["ground"])
+        for (object in world.spriteTagMap["ground"])
         {
             collideGround = cast(object, Ground);
             if (hitTestObject(collideGround)) break;
             collideGround = null;
         }
 
-        for (object in world.childByType["floor"])
+        for (object in world.spriteTagMap["floor"])
         {
             collideFloor = cast(object, Floor);
             if (hitTestObject(object)) break;
             collideFloor = null;
         }
 
-        for (object in world.childByType["lobby"])
+        for (object in world.spriteTagMap["lobby"])
         {
             collideLobby = cast(object, Lobby);
             if (hitTestObject(collideLobby)) break;
             collideLobby = null;
         }
 
-        for (object in world.childByType["wall"])
+        for (object in world.spriteTagMap["wall"])
         {
             collideWall = cast(object, Wall);
             if (hitTestObject(collideWall) && !collideWall.passThrough) break;
             collideWall = null;
         }
 
-        sortedRooms = world.childByType["room"].concat([]);
+        sortedRooms = world.spriteTagMap["room"].concat([]);
         sortedRooms.sort(sortRooms);
         for (object in sortedRooms)
         {

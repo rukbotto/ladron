@@ -103,7 +103,7 @@ class Occupant extends Sprite
 
     private function update()
     {
-        for (object in world.childByType["thief"])
+        for (object in world.spriteTagMap["thief"])
         {
             if (cast(object, Thief).globalPos.x < globalPos.x)
                 _isFacingLeft = true;

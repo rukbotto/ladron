@@ -1,7 +1,6 @@
 package ladron.worlds;
 
 import openfl.Assets;
-import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.text.TextField;
@@ -28,13 +27,13 @@ class Play extends Sprite
         return _inputManager;
     }
 
-    public var childByType(get,set):SpriteTagMap;
+    public var spriteTagMap(get,set):SpriteTagMap;
     private var _spriteTagMap:SpriteTagMap;
-    private function set_childByType(value:SpriteTagMap):SpriteTagMap
+    private function set_spriteTagMap(value:SpriteTagMap):SpriteTagMap
     {
         return _spriteTagMap = value;
     }
-    private function get_childByType():SpriteTagMap
+    private function get_spriteTagMap():SpriteTagMap
     {
         return _spriteTagMap;
     }
@@ -66,6 +65,11 @@ class Play extends Sprite
             "lobby" => [],
             "wall" => [],
             "thief" => [],
+            "closet" => [],
+            "stair" => [],
+            "bed" => [],
+            "occupant" => [],
+            "bullet" => [],
         ];
         _score = new Score(points);
         this.difficulty = difficulty;
