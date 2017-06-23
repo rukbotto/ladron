@@ -17,6 +17,7 @@ import ladron.entities.Thief;
 import ladron.entities.Wall;
 import ladron.utils.InputManager;
 import ladron.utils.Score;
+import ladron.utils.Typedefs;
 
 class Play extends Sprite
 {
@@ -27,11 +28,15 @@ class Play extends Sprite
         return _inputManager;
     }
 
-    public var childByType(get,never):Map<String,Array<DisplayObject>>;
-    private var _childByType:Map<String,Array<DisplayObject>>;
-    private function get_childByType():Map<String,Array<DisplayObject>>
+    public var childByType(get,set):SpriteTagMap;
+    private var _spriteTagMap:SpriteTagMap;
+    private function set_childByType(value:SpriteTagMap):SpriteTagMap
     {
-        return _childByType;
+        return _spriteTagMap = value;
+    }
+    private function get_childByType():SpriteTagMap
+    {
+        return _spriteTagMap;
     }
 
     public var score(get,never):Score;
@@ -54,7 +59,7 @@ class Play extends Sprite
         super();
 
         _inputManager = inputManager;
-        _childByType = [
+        _spriteTagMap = [
             "room" => [],
             "floor" => [],
             "ground" => [],
@@ -137,11 +142,11 @@ class Play extends Sprite
 
         var ground = new Ground();
         addChild(ground);
-        _childByType["ground"].push(ground);
+        _spriteTagMap["ground"].push(ground);
 
         var lobby = new Lobby();
         addChild(lobby);
-        _childByType["lobby"].push(lobby);
+        _spriteTagMap["lobby"].push(lobby);
 
         generateBuilding();
         placeLoot();
@@ -150,7 +155,7 @@ class Play extends Sprite
         var thiefY = ground.y - Thief.HEIGHT;
         var thief = new Thief(thiefX, thiefY, this);
         addChild(thief);
-        _childByType["thief"].push(thief);
+        _spriteTagMap["thief"].push(thief);
 
         lootLabel.x = thiefX - lootLabel.width / 2;
 
@@ -167,43 +172,43 @@ class Play extends Sprite
         stage.removeChild(timeLabel);
         stage.removeChild(lootLabel);
 
-        for (object in _childByType["room"])
+        for (object in _spriteTagMap["room"])
         {
             removeChild(object);
             object = null;
         }
 
-        for (object in _childByType["floor"])
+        for (object in _spriteTagMap["floor"])
         {
             removeChild(object);
             object = null;
         }
 
-        for (object in _childByType["ground"])
+        for (object in _spriteTagMap["ground"])
         {
             removeChild(object);
             object = null;
         }
 
-        for (object in _childByType["lobby"])
+        for (object in _spriteTagMap["lobby"])
         {
             removeChild(object);
             object = null;
         }
 
-        for (object in _childByType["wall"])
+        for (object in _spriteTagMap["wall"])
         {
             removeChild(object);
             object = null;
         }
 
-        for (object in _childByType["thief"])
+        for (object in _spriteTagMap["thief"])
         {
             removeChild(object);
             object = null;
         }
 
-        _childByType = null;
+        _spriteTagMap = null;
         _inputManager = null;
         _score = null;
 
@@ -219,7 +224,7 @@ class Play extends Sprite
         scoreLabel.x = stage.stageWidth / 10 * 8 - scoreLabel.width / 2;
         scoreLabel.y = stage.stageHeight / 20;
 
-        for (object in _childByType["thief"])
+        for (object in _spriteTagMap["thief"])
         {
             var thief = cast(object, Thief);
 
@@ -261,7 +266,7 @@ class Play extends Sprite
             var wall = new Wall(wallX, wallY);
             if (i == 0) wall.passThrough = true;
             addChild(wall);
-            _childByType["wall"].push(wall);
+            _spriteTagMap["wall"].push(wall);
 
             for (j in 0...rooms)
             {
@@ -277,14 +282,14 @@ class Play extends Sprite
                 else if (j == 0 && i % 2 == 0 && i > 0)
                     room.setStairDownFront();
                 addChild(room);
-                _childByType["room"].push(room);
+                _spriteTagMap["room"].push(room);
 
                 wallX = x + (j + 1) * Wall.WIDTH + (j + 1) * Room.WIDTH;
                 wallY = y - (i + 1) * Room.HEIGHT - i * Floor.HEIGHT;
                 wall = new Wall(wallX, wallY);
                 if (j < rooms - 1) wall.passThrough = true;
                 addChild(wall);
-                _childByType["wall"].push(wall);
+                _spriteTagMap["wall"].push(wall);
             }
 
             floorX = x;
@@ -292,15 +297,15 @@ class Play extends Sprite
             floorWidth = Room.WIDTH * rooms + Wall.WIDTH * (rooms + 1);
             var floor = new Floor(floorX, floorY, floorWidth);
             addChild(floor);
-            _childByType["floor"].push(floor);
+            _spriteTagMap["floor"].push(floor);
         }
     }
 
     private function placeLoot()
     {
-        var totalRooms = _childByType["room"].length;
+        var totalRooms = _spriteTagMap["room"].length;
         var random = Math.round(Math.random() * (totalRooms - 1.0));
-        var room = cast(_childByType["room"][random], Room);
+        var room = cast(_spriteTagMap["room"][random], Room);
         for (object in room.childByType["closet"])
             cast(object, Closet).hasLoot = true;
     }
